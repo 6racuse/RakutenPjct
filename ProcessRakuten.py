@@ -14,8 +14,9 @@ from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.ensemble import RandomForestClassifier
 import time
 import spacy
+from joblib import dump, load
 
-
+import BankModel
 
 def import_data(spacy_nlp,reload):
     
@@ -23,7 +24,7 @@ def import_data(spacy_nlp,reload):
     y_data = pd.read_csv(Y_train_filename,sep=',')
     y = y_data['prdtypecode']
     filename = "X_dt.mat"
-    part = 1
+    part = 10
     
     
     if reload:
@@ -53,10 +54,10 @@ def import_data(spacy_nlp,reload):
 def RandomForest(X,Y):
     
     params = {
-    'n_estimators': [300]#[10,50,100,200,300,400]
+    'n_estimators': [50]#[10,50,100,200,300,400]
     }   
     n_folds = 10
-    cv = KFold(n_splits=n_folds, shuffle=True)
+    cv = KFold(n_splits=n_folds, shuffle=False)
     
     grid_search = GridSearchCV(
     estimator=RandomForestClassifier(),
@@ -79,7 +80,21 @@ def main():
     
     t = time.time()
     model = RandomForest(X_train,Y_train)
+    
+    
+    
+    rf_filename = ".\models\\RandomForest.joblib"
+    
+    dump(model, rf_filename)
+    
+    BankModel.split_model(rf_filename,8)
+    
+    rfGB_filename = ".\models\\RandomForestGetBack.joblib"
+    BankModel.GetBack_model(rfGB_filename,8)
+    model = load(rfGB_filename)
+    
     y_pred = model.predict(X_test)
+    
     
     accuracy = accuracy_score(Y_test, y_pred)
     print(accuracy)
