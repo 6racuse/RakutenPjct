@@ -23,7 +23,7 @@ def import_data(spacy_nlp,reload):
     y_data = pd.read_csv(Y_train_filename,sep=',')
     y = y_data['prdtypecode']
     filename = "X_dt.mat"
-    part = 20
+    part = 1
     
     
     if reload:
@@ -46,18 +46,17 @@ def import_data(spacy_nlp,reload):
     
     tfidf = TfidfVectorizer()
     X_tfidf_sample = tfidf.fit_transform(X_data)
-    
+    print(X_tfidf_sample.shape)
     return train_test_split(X_tfidf_sample[:len(X_data)//part],y[:len(X_data)//part],test_size=0.25,random_state=42,shuffle=True)
         
         
 def RandomForest(X,Y):
     
     params = {
-    'n_estimators': [240,245,247,250,253,255]#[10,50,100,200,300,400]
+    'n_estimators': [300]#[10,50,100,200,300,400]
     }   
     n_folds = 10
     cv = KFold(n_splits=n_folds, shuffle=True)
-    
     
     grid_search = GridSearchCV(
     estimator=RandomForestClassifier(),
@@ -67,6 +66,7 @@ def RandomForest(X,Y):
     ).fit(X, Y)
         
     return grid_search
+    
     
     
 def main():
