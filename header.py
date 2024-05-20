@@ -24,7 +24,7 @@ def raw_to_tokens(raw_string, spacy_nlp):
     
 
     # Write code to remove punctuation tokens and create string tokens
-    string_tokens = [token.orth_ for token in spacy_tokens if not token.is_punct]
+    string_tokens = [token.orth_ for token in spacy_tokens if not token.is_punct if not token.is_stop]
     # Write code to join the tokens back into a single string
     clean_string = " ".join(string_tokens)
 
@@ -34,7 +34,8 @@ def raw_to_tokens(raw_string, spacy_nlp):
 def normalize_accent(string):
     string = string.replace('á', 'a')
     string = string.replace('â', 'a')
-
+    string = string.replace('à', 'a')
+    
     string = string.replace('é', 'e')
     string = string.replace('è', 'e')
     string = string.replace('ê', 'e')
@@ -42,7 +43,7 @@ def normalize_accent(string):
 
     string = string.replace('î', 'i')
     string = string.replace('ï', 'i')
-
+    string = string.replace('n°','n')
     string = string.replace('ö', 'o')
     string = string.replace('ô', 'o')
     string = string.replace('ò', 'o')
