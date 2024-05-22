@@ -17,4 +17,6 @@ Nous avons séparé le projet en plusieurs parties **distingues** mais pour auta
 - 19/05 : Création du fichier .py main du projet, stockage de la matrice TFIDF en mémoire pour éviter de le reload à chaque fois
 - 20/05 : Résolution du problème de transfert des modèles (tout seul), en coupant le fichier .joblib en n fichiers binaires 
 - 21/05 : Travail en local sur une approche SVM. Début de la modélisation complexe de la solution, alliant plusieures méthodes. Amélioration de la solution Deep Learning. Amélioration de la structure du code de rendu en local.
--   
+
+
+  ![image](https://github.com/6racuse/RakutenPjct/assets/148326846/07db6a81-180b-4600-b3d4-c2d9ea86932b)
