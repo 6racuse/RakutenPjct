@@ -130,21 +130,30 @@ X_test_tfidf = tfidf.transform(X_test_raw_designation_clean)
 print(X_train_tfidf.shape, X_test_tfidf.shape)
 
 # Entraînement
-svm = SVC(kernel='rbf')
+param_grid = {
+    'C': [100],
+    'gamma': [1, 0.1, 0.01, 0.001],
+    'kernel': ['rbf']
+}
+
+grid_search = GridSearchCV(
+    SVC(),
+    param_grid,
+    refit=True,
+    verbose=10,
+    cv=5,
+    scoring='f1_macro'
+)
 
 training_start_time = time.time()
-
-svm.fit(
-    X_train_tfidf,
-    Y_train
-)
+grid_search.fit(X_train_tfidf, Y_train)
 
 training_end_time = time.time()
 training_time_h, training_time_min, training_time_s = convert_seconds(training_end_time - training_start_time)
 
 print(f"Model trained in {int(training_time_h)}h {int(training_time_min)}min {int(training_time_s)}s")
 
-Y_pred_svm = svm.predict(X_test_tfidf)
+Y_pred_svm = grid_search.predict(X_test_tfidf)
 
 # Évaluation du modèle
 print(
