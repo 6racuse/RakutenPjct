@@ -9,7 +9,11 @@ def progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, 
     if iteration == total:
         print()
         
-
+def convert_seconds(seconds):
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    secs = seconds % 60
+    return hours, minutes, secs
 
         
 def raw_to_tokens(raw_string, spacy_nlp):
