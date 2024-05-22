@@ -10,6 +10,14 @@ Nous avons séparé le projet en plusieurs parties **distingues** mais pour auta
 - Elaboration d'un éventail des méthodes potentiellement viables pour répondre au problème
 - Proposition d'un modèle couplé complexe permettant d'obtenir la meilleure réponse au problème
 
+  
+## Setup
+
+
+## Run It ! 
+
+
+
 ## Project History
 ### Alexis CHATAIL--RIGOLLEAU
 - 15/05 : lancement du projet, préprocessing de la donnée textuelle "designation", récupération de la matrice TFIDF.
