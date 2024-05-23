@@ -6,12 +6,14 @@ import spacy
 
 import warnings
 import time
+import pickle
+import os
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
-def load_data(fast_coeff : int):
+def load_data(fast_coeff : int, random_state : int, test_size : float):
     X_train = pd.read_csv(
         "/Users/welto/Library/CloudStorage/OneDrive-CentraleSupelec/2A/CASA/RakutenPjct/data/X_train_update.csv",
         sep=',',
@@ -29,8 +31,8 @@ def load_data(fast_coeff : int):
     X_train, X_test, Y_train, Y_test = train_test_split(
         X_train,
         Y_train,
-        test_size=0.2,
-        random_state=42
+        test_size=test_size,
+        random_state=random_state
     )
     X_train = X_train['designation'][:X_train.shape[0]//fast_coeff].tolist()
     X_test = X_test['designation'][:X_test.shape[0]//fast_coeff].tolist()
@@ -39,7 +41,10 @@ def load_data(fast_coeff : int):
     Y_test = Y_test['prdtypecode'][:Y_test.shape[0]//fast_coeff].tolist()
 
     return X_train, X_test, Y_train, Y_test
-def tokenise_cleaning_data(X_train, X_test):
+def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
+    if os.path.exists(train_filename) and os.path.exists(test_filename):
+        return load_tokenized_data(train_filename, test_filename)
+
     spacy_nlp = spacy.load("fr_core_news_sm")
 
     X_train_clean = []
@@ -94,6 +99,8 @@ def tokenise_cleaning_data(X_train, X_test):
 
     print(f"Preprocessed in {int(preprocessing_time_h)}h {int(preprocessing_time_min)}min {int(preprocessing_time_s)}s")
 
+    save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename)
+
     return X_train_clean, X_test_clean
 def vectorize_data(X_train_clean, X_test_clean):
     tfidf = TfidfVectorizer()
@@ -102,10 +109,39 @@ def vectorize_data(X_train_clean, X_test_clean):
     X_test_tfidf = tfidf.transform(X_test_clean)
 
     return X_train_tfidf, X_test_tfidf
+def save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename):
+    with open(
+            train_filename,
+            'wb'
+    ) as f:
+        pickle.dump(
+            X_train_clean,
+            f
+        )
+    with open(
+            test_filename,
+            'wb'
+    ) as f:
+        pickle.dump(
+            X_test_clean,
+            f
+        )
+def load_tokenized_data(train_filename, test_filename):
+    with open(
+            train_filename,
+            'rb'
+    ) as f:
+        X_train_clean = pickle.load(f)
+    with open(
+            test_filename,
+            'rb'
+    ) as f:
+        X_test_clean = pickle.load(f)
+    return X_train_clean, X_test_clean
 def train_model(X_train_tfidf, Y_train):
     param_grid = {
-        'C': [0.1, 1, 10, 100],
-        'gamma': [1, 0.1, 0.01, 0.001],
+        'C': [10, 100],
+        'gamma': [1, 0.1],
         'kernel': ['rbf']
     }
     grid_search = GridSearchCV(
@@ -134,15 +170,20 @@ def evaluate_model(model, X_test_tfidf, Y_test):
         Y_pred
     )
     return f1, accuracy
-def main():
+def main(fast_coeff : int, random_state : int, test_size : float):
     exec_time_start = time.time()
     warnings.filterwarnings("ignore")
 
-    X_train, X_test, Y_train, Y_test = load_data(100)
+    train_filename = 'X_train_clean.pkl'
+    test_filename = 'X_test_clean.pkl'
+
+    X_train, X_test, Y_train, Y_test = load_data(fast_coeff, random_state, test_size)
 
     X_train_clean, X_test_clean = tokenise_cleaning_data(
         X_train,
-        X_test
+        X_test,
+        train_filename,
+        test_filename
     )
 
     X_train_tfidf, X_test_tfidf = vectorize_data(
@@ -174,6 +215,9 @@ def main():
     exec_time_h, exec_time_min, exec_time_s = header.convert_seconds(exec_time_end - exec_time_start)
     print(f"Executed in {int(exec_time_h)}h {int(exec_time_min)}min {int(exec_time_s)}s")
 
-
 if __name__ == "__main__":
-    main()
+    main(
+        fast_coeff=100,
+        random_state=53, #53 (f1 = 0.65, accuracy = 0.69)
+        test_size=0.2
+    )
