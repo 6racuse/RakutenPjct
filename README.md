@@ -24,7 +24,9 @@ Nous avons séparé le projet en plusieurs parties **distingues** mais pour auta
 - 16,17/05 : Création du Notebook python pour tester les méthodes, définition de la stratégie en groupe, travail en local.
 - 19/05 : Création du fichier .py main du projet, stockage de la matrice TFIDF en mémoire pour éviter de le reload à chaque fois. Méthode Random Forest longue en CV, et f1_score = 0.697.
 - 20/05 : Résolution du problème de transfert des modèles (tout seul), en coupant le fichier .joblib en n fichiers binaires. Ajout d'une première méthode de Deep Learning sur une partition du fichier de départ, f1_score = 0.732.
-- 21/05 : Travail en local sur une approche SVM. Début de la modélisation complexe de la solution, alliant plusieures méthodes. Amélioration de la solution Deep Learning. Amélioration de la structure du code de rendu en local. f1_score = 0.845.
+- 21/05 : Travail en local sur une approche SVM. Début de la modélisation complexe de la solution, alliant plusieures méthodes. Amélioration de la solution Deep Learning. Amélioration de la structure du code de rendu en local. f1_score = 0.7917
+- 22/05 : problème de commit trop gros : travail en local.
+- 23/05 : problème réglé, retour au fichier main.py et amélioration de l'interface
 
 
   ![image](https://github.com/6racuse/RakutenPjct/assets/148326846/07db6a81-180b-4600-b3d4-c2d9ea86932b)
