@@ -100,7 +100,7 @@ def main():
 # BankModel.GetBack_model(rfGB_filename,8)
 # model = load(rfGB_filename)
     
-    F1 = f1_score(Y_test,y_pred,average='weighted')
+    F1 = f1_score(Y_test,y_pred,average='macro')
     
         
     
