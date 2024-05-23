@@ -60,3 +60,16 @@ def normalize_accent(string):
     string = string.replace('ç', 'c')
 
     return string
+
+def Save_label_output(y_pred_labels, len_X_train):
+    from csv import writer
+
+    filename = 'ylabel_nn.csv'
+    # Écriture de la liste dans le fichier CSV
+    with open(filename, mode='w', newline='') as file:
+        writer = writer(file, lineterminator='\n')
+        writer.writerow(['','prdtypecode'])
+        k=0
+        for value in y_pred_labels:
+            writer.writerow([len_X_train+k,value])
+            k+=1
