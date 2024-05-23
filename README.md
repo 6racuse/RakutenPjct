@@ -28,5 +28,12 @@ Nous avons séparé le projet en plusieurs parties **distingues** mais pour auta
 - 22/05 : problème de commit trop gros : travail en local.
 - 23/05 : problème réglé, retour au fichier main.py et amélioration de l'interface
 
+### Welto CANDE
+- 15/05 : Démarrage du projet, importation et premier preprocessing des données textuelles (récupération des données d'intérêt). Travail en local.
+- 18/05 : Travail en local, calcul des matrices TF-IDF et preprocessing (tokenisation, cleaning) , premiers pas vers l'application de SVM.
+- 21/05 : Notebook de test : SVM, premier entraînement du modèle pour obtenir des premiers résultats de score. Score très bas : la prédiction des labels (X_test depuis le site) se basait sur un Y_test calculé depuis Y_train. 
+- 22/05 : Création d'un fichier .py général. Entraînement du SVM avec des données train_test_split(), score plus acceptable : f1_score = 0.786
+- 23/05 : Variation des hyperparamètres, effet du paramaètre "random_state" de train_test_split (recherche du f1_score max). Pour random_state = 53, f1_score = 0.800. Refonte du code général pour obtenir la prédiction des labels de X_test (.csv du site du challenge). Introduction d'une cross validation. Après calcul des paramètres optimaux, f1_score = 0.8197
+
 
   ![image](https://github.com/6racuse/RakutenPjct/assets/148326846/07db6a81-180b-4600-b3d4-c2d9ea86932b)
