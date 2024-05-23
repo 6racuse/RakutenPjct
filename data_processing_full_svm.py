@@ -160,19 +160,6 @@ def train_model(X_train_tfidf, Y_train):
     )
     return svm
 
-"""def evaluate_model(model, X_test_challenge_tfidf, Y_test):
-    Y_pred_challenge = model.predict(X_test_challenge_tfidf)
-
-    f1 = f1_score(
-        Y_test,
-        Y_pred_challenge,
-        average='macro'
-    )
-    accuracy = accuracy_score(
-        Y_test,
-        Y_pred_challenge
-    )
-    return f1, accuracy, Y_pred_challenge"""
 def main(fast_coeff : int):
     exec_time_start = time.time()
     warnings.filterwarnings("ignore")
@@ -200,21 +187,6 @@ def main(fast_coeff : int):
     )
 
     Y_pred_challenge = model.predict(X_test_challenge_tfidf)
-
-    """f1, accuracy, Y_pred_svm = evaluate_model(
-        model,
-        X_test_challenge_tfidf,
-        Y_test
-    )
-
-    print(
-        "f1 score:",
-        f1
-    )
-    print(
-        "accuracy score:",
-        accuracy
-    )"""
 
     header.Save_label_output(Y_pred_challenge, len(X_train_clean))
 
