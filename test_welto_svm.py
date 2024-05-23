@@ -16,11 +16,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 from sklearn.pipeline import make_pipeline
 
-def convert_seconds(seconds):
-    hours = seconds // 3600
-    minutes = (seconds % 3600) // 60
-    secs = seconds % 60
-    return hours, minutes, secs
+exec_time_start = time.time()
 
 # Ignore warnings
 warnings.filterwarnings("ignore")
@@ -37,7 +33,7 @@ Y_train = pd.read_csv(
 )
 
 # Preprocessing
-fast_coeff = 5
+fast_coeff = 1
 
 # Suppression des colonnes inutiles
 X_train = X_train.drop(
@@ -117,7 +113,7 @@ for k in range(b):
     )
 
 preprocessing_end_time = time.time()
-preprocessing_time_h, preprocessing_time_min, preprocessing_time_s = convert_seconds(preprocessing_end_time - preprocessing_start_time)
+preprocessing_time_h, preprocessing_time_min, preprocessing_time_s = header.convert_seconds(preprocessing_end_time - preprocessing_start_time)
 
 print(f"Preprocessed in {int(preprocessing_time_h)}h {int(preprocessing_time_min)}min {int(preprocessing_time_s)}s")
 
@@ -131,7 +127,7 @@ print(X_train_tfidf.shape, X_test_tfidf.shape)
 
 # Entraînement
 param_grid = {
-    'C': [100],
+    'C': [0.1, 1, 10, 100],
     'gamma': [1, 0.1, 0.01, 0.001],
     'kernel': ['rbf']
 }
@@ -149,7 +145,7 @@ training_start_time = time.time()
 grid_search.fit(X_train_tfidf, Y_train)
 
 training_end_time = time.time()
-training_time_h, training_time_min, training_time_s = convert_seconds(training_end_time - training_start_time)
+training_time_h, training_time_min, training_time_s = header.convert_seconds(training_end_time - training_start_time)
 
 print(f"Model trained in {int(training_time_h)}h {int(training_time_min)}min {int(training_time_s)}s")
 
@@ -171,3 +167,9 @@ print(
         Y_pred_svm
     )
 )
+
+exec_time_end = time.time()
+exec_time_h, exec_time_min, exec_time_s = header.convert_seconds(exec_time_end - exec_time_start)
+
+print(f"Executed in {int(exec_time_h)}h {int(exec_time_min)}min {int(exec_time_s)}s")
+
