@@ -36,8 +36,13 @@ def f1_score(y_true, y_pred):
     return f1
 
 def LaunchNN_Model(X_data, y_data):
+    from os.path import exists
     Bypass_bool = input("Bypass learning process - this directly loads the best_model_nn from memory - (yes/no) : ")
-    if Bypass_bool == 'no':
+    mat_filename = '.\models\\best_model.keras'
+    Must_Reload = not exists(mat_filename)
+    
+    
+    if (Bypass_bool == 'no' or Must_Reload):
         model = NN(X_data, y_data)
     elif Bypass_bool == 'yes':
         model = Bypass_learning()
@@ -45,15 +50,15 @@ def LaunchNN_Model(X_data, y_data):
         print("wrong input")
         return Error_Map.TYPE_ERROR_INPUT.value
 
-    model.load_weights('best_model.keras')
+    model.load_weights('.\models\\best_model.keras')
     return model
 
 def Bypass_learning():
-    model = tf.keras.models.load_model('best_model.keras', custom_objects={"f1_score": f1_score})
+    model = tf.keras.models.load_model('.\models\\best_model.keras', custom_objects={"f1_score": f1_score})
     return model
 
 def Get_NN_Prediction(model, X_test):
-    model.load_weights('best_model.keras')
+    model.load_weights('.\models\\best_model.keras')
 
     tfidf_vectorizer = TfidfVectorizer()
     X_tfidf_test = tfidf_vectorizer.fit_transform(X_test)
@@ -122,7 +127,7 @@ def NN(X_data, y_data):
 
     early_stopping = EarlyStopping(monitor='val_f1_score', patience=5, mode='max', restore_best_weights=True)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=3, min_lr=0.001)
-    model_checkpoint = ModelCheckpoint('best_model.keras', monitor='val_f1_score', mode='max', save_best_only=True, verbose=1)
+    model_checkpoint = ModelCheckpoint('.\models\\best_model.keras', monitor='val_f1_score', mode='max', save_best_only=True, verbose=1)
 
     batch_size = 32
     train_generator = SparseMatrixBatchGenerator(X_train, y_train, batch_size)
@@ -133,5 +138,5 @@ def NN(X_data, y_data):
                         validation_data=val_generator,
                         callbacks=[early_stopping, reduce_lr, model_checkpoint])
 
-    model.save('best_model.keras')
+    model.save('.\models\\best_model.keras')
     return model
