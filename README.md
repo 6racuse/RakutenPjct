@@ -28,10 +28,17 @@ La dernière version du projet (e1r0) propose un **f1_score** de **0.8256**, obt
 Clonez le dépôt et installez les dépendances :
 
 ```bash
-git clone https://github.com/votre-utilisateur/nom-du-projet.git
-cd nom-du-projet
+git clone https://github.com/6racuse/RakutenPjct.git
+cd RakutenPjct
 pip install -r requirements.txt
+```
+Même si le code gère l'instalation des ressources nltk, nous recommandons d'exécuter les instructions suivantes :
 
+    ```python
+    import nltk
+    nltk.download('punkt')
+    nltk.download('stopwords')
+    ```
 ## Run 
 
 
