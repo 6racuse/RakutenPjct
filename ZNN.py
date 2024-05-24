@@ -140,3 +140,14 @@ def NN(X_data, y_data):
 
     model.save('.\models\\best_model.keras')
     return model
+
+
+
+
+
+
+
+
+#========================================================================
+
+
