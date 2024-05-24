@@ -34,11 +34,11 @@ pip install -r requirements.txt
 ```
 Même si le code gère l'instalation des ressources nltk, nous recommandons d'exécuter les instructions suivantes :
 
-    ```python
-    import nltk
-    nltk.download('punkt')
-    nltk.download('stopwords')
-    ```
+```python
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+```
 ## Run 
 
 
