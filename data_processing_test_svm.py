@@ -3,6 +3,7 @@ import header
 import numpy as np
 import pandas as pd
 import spacy
+import string
 
 import warnings
 import time
@@ -67,7 +68,13 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
     preprocessing_start_time = time.time()
 
     for k in range(a):
-        tokens = word_tokenize(X_train[k], language='french')
+        tokens = word_tokenize(
+            header.normalize_accent(
+                X_train[k].lower()
+            ),
+            language='french'
+        )
+        tokens = [word for word in tokens if word not in string.punctuation]
         X_train_clean.append(tokens)
         header.progress_bar(
             k + 1,
@@ -78,7 +85,13 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
         )
 
     for k in range(b):
-        tokens = word_tokenize(X_test[k], language='french')
+        tokens = word_tokenize(
+            header.normalize_accent(
+                X_test[k].lower()
+            ),
+            language='french'
+        )
+        tokens = [word for word in tokens if word not in string.punctuation]
         X_test_clean.append(tokens)
         header.progress_bar(
             k + 1,
@@ -87,6 +100,9 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
             suffix='Complete',
             length=50
         )
+
+    X_train_clean = [' '.join(tokens) for tokens in X_train_clean]
+    X_test_clean = [' '.join(tokens) for tokens in X_test_clean]
 
     preprocessing_end_time = time.time()
     preprocessing_time_h, preprocessing_time_min, preprocessing_time_s = header.convert_seconds(
@@ -101,12 +117,8 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
 def vectorize_data(X_train_clean, X_test_clean):
     tfidf = TfidfVectorizer()
 
-    # Join tokens back into strings
-    X_train_strings = [' '.join(tokens) for tokens in X_train_clean]
-    X_test_strings = [' '.join(tokens) for tokens in X_test_clean]
-
-    X_train_tfidf = tfidf.fit_transform(X_train_strings)
-    X_test_tfidf = tfidf.transform(X_test_strings)
+    X_train_tfidf = tfidf.fit_transform(X_train_clean)
+    X_test_tfidf = tfidf.transform(X_test_clean)
 
     return X_train_tfidf, X_test_tfidf
 def save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename):
@@ -234,7 +246,6 @@ def main(fast_coeff : int, random_state : int, test_size : float):
         "accuracy score:",
         accuracy
     )
-
 
     #header.Save_label_output(Y_pred_svm, len(X_train_clean))
 
