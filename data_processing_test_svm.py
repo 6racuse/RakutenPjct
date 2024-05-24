@@ -158,29 +158,29 @@ def load_tokenized_data(train_filename, test_filename):
 def train_model(X_train_tfidf, Y_train):
     # best_params
     param_grid = {
-        'C': np.linspace(1, 100), #8.071428571428571
-        'gamma': np.linspace(0.1, 5),
-        'kernel': ['rbf']
+        'C': 8.071428571428571, #np.linspace(5, 10, 5), #8.071428571428571,  ,
+        'gamma': 0.1,
+        'kernel': 'rbf'
     }
-    svm = GridSearchCV(
+    """svm = GridSearchCV(
         SVC(kernel='rbf'),
         n_jobs=-1,
         refit=True,
         param_grid=param_grid,
         cv=10,
         verbose=10
-    )
-    """svm = SVC(
+    )"""
+    svm = SVC(
         C=param_grid['C'],
         gamma=param_grid['gamma'],
         kernel=param_grid['kernel']
-    )"""
+    )
     svm.fit(
         X_train_tfidf,
         Y_train
     )
 
-    best_params = svm.best_params_
+    """best_params = svm.best_params_
 
     print(
         "best params :",
@@ -195,7 +195,7 @@ def train_model(X_train_tfidf, Y_train):
     svm.fit(
         X_train_tfidf,
         Y_train
-    )
+    )"""
     return svm
 
 def evaluate_model(model, X_test_tfidf, Y_test):
@@ -260,7 +260,7 @@ def main(fast_coeff : int, random_state : int, test_size : float):
 
 if __name__ == "__main__":
     main(
-        fast_coeff=100,
+        fast_coeff=1,
         random_state=53, #53 (random_state qui semble maximiser le f1 score)
         test_size=0.2
     )

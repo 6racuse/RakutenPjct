@@ -3,6 +3,7 @@ import header
 import numpy as np
 import pandas as pd
 import spacy
+import string
 
 import warnings
 import time
@@ -11,6 +12,7 @@ import os
 import nltk
 
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 from joblib import dump, load
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, f1_score
@@ -52,9 +54,12 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
         return load_tokenized_data(train_filename, test_filename)
 
     nltk.download("punkt")
+    nltk.download("stopwords")
+
+    stop_words = set(stopwords.words('french'))
 
     X_train_clean = []
-    X_test_challenge_clean = []
+    X_test_clean = []
 
     a = len(X_train)
     b = len(X_test)
@@ -71,9 +76,12 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
 
     for k in range(a):
         tokens = word_tokenize(
-            X_train[k],
+            header.normalize_accent(
+                X_train[k].lower()
+            ),
             language='french'
         )
+        tokens = [word for word in tokens if word not in string.punctuation and word not in stop_words]
         X_train_clean.append(tokens)
         header.progress_bar(
             k + 1,
@@ -85,10 +93,13 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
 
     for k in range(b):
         tokens = word_tokenize(
-            X_test[k],
+            header.normalize_accent(
+                X_test[k].lower()
+            ),
             language='french'
         )
-        X_test_challenge_clean.append(tokens)
+        tokens = [word for word in tokens if word not in string.punctuation and word not in stop_words]
+        X_test_clean.append(tokens)
         header.progress_bar(
             k + 1,
             b,
@@ -97,20 +108,21 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
             length=50
         )
 
+    X_train_clean = [' '.join(tokens) for tokens in X_train_clean]
+    X_test_clean = [' '.join(tokens) for tokens in X_test_clean]
+
     preprocessing_end_time = time.time()
     preprocessing_time_h, preprocessing_time_min, preprocessing_time_s = header.convert_seconds(
-        preprocessing_end_time - preprocessing_start_time)
+        preprocessing_end_time - preprocessing_start_time
+    )
 
     print(f"Preprocessed in {int(preprocessing_time_h)}h {int(preprocessing_time_min)}min {int(preprocessing_time_s)}s")
 
-    save_tokenized_data(X_train_clean, X_test_challenge_clean, train_filename, test_filename)
+    save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename)
 
-    return X_train_clean, X_test_challenge_clean
+    return X_train_clean, X_test_clean
 def vectorize_data(X_train_clean, X_test_challenge_clean):
     tfidf = TfidfVectorizer()
-
-    X_train_clean = [' '.join(tokens) for tokens in X_train_clean]
-    X_test_challenge_clean = [' '.join(tokens) for tokens in X_test_challenge_clean]
 
     X_train_tfidf = tfidf.fit_transform(X_train_clean)
     X_test_tfidf = tfidf.transform(X_test_challenge_clean)
