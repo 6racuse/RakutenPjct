@@ -5,6 +5,11 @@ Ce projet a pour étude le dataset proposé dans le cadre du **Rakuten France Mu
 
 Nous, Welto et Alexis, proposons ici une solution viable au regard de nos connaissances et capacités en Data Science, suivant les cours suivis à Centrale Casablanca, dans le cadre de notre semestre universitaire à l'étranger.
 
+- [Résultats](#Résultats)
+- [Setup](#Setup)
+- [Run It !](#Run It !)
+- [Project History](#Project History)
+- 
 Nous avons séparé le projet en plusieurs parties **distingues** mais pour autant **complémentaires** : 
 - Préprocessing, Feature engineering, Affichage des données et compréhension du jeu de données.
 - Elaboration d'un éventail des méthodes potentiellement viables pour répondre au problème
