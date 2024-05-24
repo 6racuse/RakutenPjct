@@ -13,6 +13,11 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.metrics import accuracy_score, f1_score, classification_report
+from xgboost import XGBClassifier
+from sklearn.preprocessing import LabelEncoder
+
 
 def load_data(fast_coeff : int, random_state, test_size : float):
     X_train = pd.read_csv(
@@ -41,12 +46,16 @@ def load_data(fast_coeff : int, random_state, test_size : float):
     Y_train = Y_train['prdtypecode'][:Y_train.shape[0]//fast_coeff].tolist()
     Y_test = Y_test['prdtypecode'][:Y_test.shape[0]//fast_coeff].tolist()
 
-    return X_train, X_test, Y_train, Y_test
+    label_encoder = LabelEncoder()
+
+    Y_train = label_encoder.fit_transform(Y_train)
+    Y_test = label_encoder.transform(Y_test)
+
+    return X_train, X_test, Y_train, Y_test, label_encoder
+
 def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
     if os.path.exists(train_filename) and os.path.exists(test_filename):
         return load_tokenized_data(train_filename, test_filename)
-
-    spacy_nlp = spacy.load("fr_core_news_lg")
 
     X_train_clean = []
     X_test_clean = []
@@ -65,12 +74,8 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
     preprocessing_start_time = time.time()
 
     for k in range(a):
-        X_train_clean.append(
-            header.raw_to_tokens(
-                X_train[k],
-                spacy_nlp
-            )
-        )
+        tokens = word_tokenize(X_train[k], language='french')
+        X_train_clean.append(tokens)
         header.progress_bar(
             k + 1,
             a,
@@ -80,12 +85,8 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
         )
 
     for k in range(b):
-        X_test_clean.append(
-            header.raw_to_tokens(
-                X_test[k],
-                spacy_nlp
-            )
-        )
+        tokens = word_tokenize(X_test[k], language='french')
+        X_test_clean.append(tokens)
         header.progress_bar(
             k + 1,
             b,
@@ -107,10 +108,15 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
 def vectorize_data(X_train_clean, X_test_clean):
     tfidf = TfidfVectorizer()
 
-    X_train_tfidf = tfidf.fit_transform(X_train_clean)
-    X_test_tfidf = tfidf.transform(X_test_clean)
+    # Join tokens back into strings
+    X_train_strings = [' '.join(tokens) for tokens in X_train_clean]
+    X_test_strings = [' '.join(tokens) for tokens in X_test_clean]
+
+    X_train_tfidf = tfidf.fit_transform(X_train_strings)
+    X_test_tfidf = tfidf.transform(X_test_strings)
 
     return X_train_tfidf, X_test_tfidf
+
 def save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename):
     with open(
             train_filename,
@@ -140,69 +146,75 @@ def load_tokenized_data(train_filename, test_filename):
     ) as f:
         X_test_clean = pickle.load(f)
     return X_train_clean, X_test_clean
+
 def train_model(X_train_tfidf, Y_train):
-    # best_params
-    param_grid = {
-        'C': np.linspace(1, 100, 15), #8.071428571428571
-        'gamma': [0.1],
-        #'kernel':'rbf'
-    }
-    svm = GridSearchCV(
-        SVC(kernel='rbf'),
-        n_jobs=-1,
-        refit=True,
-        param_grid=param_grid,
-        cv=10,
-        verbose=10
-    )
-    """svm = SVC(
-        C=param_grid['C'],
-        gamma=param_grid['gamma'],
-        kernel=param_grid['kernel']
-    )"""
-    svm.fit(
+    """param_grid = {
+        'n_estimators': 200,
+        'learning_rate': 0.1,
+        'max_depth': 7
+    }"""
+
+    xgb = XGBClassifier()
+
+    xgb.fit(
         X_train_tfidf,
         Y_train
     )
-    best_params = svm.best_params_
 
+    """best_params = grid_search.best_params_
     print(
-        "best params :",
+        "Best params:",
         best_params
-    )
+    )"""
 
-    svm = SVC(
-        C=best_params['C'],
-        gamma=best_params['gamma'],
-        kernel='rbf'
-    )
-    svm.fit(
+    """model = XGBClassifier(**best_params)
+    model.fit(
         X_train_tfidf,
         Y_train
-    )
-    return svm
+    )"""
 
-def evaluate_model(model, X_test_tfidf, Y_test):
-    Y_pred = model.predict(X_test_tfidf)
+    return xgb
+
+
+def evaluate_model(model, X_test_tfidf, Y_test, label_encoder):
+    Y_pred_rf = label_encoder.inverse_transform(
+        model.predict(X_test_tfidf)
+    )
 
     f1 = f1_score(
         Y_test,
-        Y_pred,
+        Y_pred_rf,
         average='macro'
     )
+
     accuracy = accuracy_score(
         Y_test,
-        Y_pred
+        Y_pred_rf
     )
-    return f1, accuracy, Y_pred
-def main(fast_coeff : int, random_state : int, test_size : float):
+
+    print(
+        "Classification Report :",
+        classification_report(
+            Y_test,
+            Y_pred_rf
+        )
+    )
+
+    return f1, accuracy, Y_pred_rf
+
+def main(fast_coeff: int, random_state: int, test_size: float):
+
     exec_time_start = time.time()
     warnings.filterwarnings("ignore")
 
     train_filename = 'X_train_clean.pkl'
     test_filename = 'X_test_clean.pkl'
 
-    X_train, X_test, Y_train, Y_test = load_data(fast_coeff, random_state, test_size)
+    X_train, X_test, Y_train, Y_test, label_encoder = load_data(
+        fast_coeff,
+        random_state,
+        test_size
+    )
 
     X_train_clean, X_test_clean = tokenise_cleaning_data(
         X_train,
@@ -221,23 +233,17 @@ def main(fast_coeff : int, random_state : int, test_size : float):
         Y_train
     )
 
-    f1, accuracy, Y_pred_svm = evaluate_model(
+    Y_test = label_encoder.inverse_transform(Y_test)
+
+    f1, accuracy, Y_pred_rf = evaluate_model(
         model,
         X_test_tfidf,
-        Y_test
+        Y_test,
+        label_encoder
     )
 
-    print(
-        "f1 score:",
-        f1
-    )
-    print(
-        "accuracy score:",
-        accuracy
-    )
-
-
-    #header.Save_label_output(Y_pred_svm, len(X_train_clean))
+    print("F1 Score:", f1)
+    print("Accuracy Score:", accuracy)
 
     exec_time_end = time.time()
     exec_time_h, exec_time_min, exec_time_s = header.convert_seconds(exec_time_end - exec_time_start)

@@ -9,25 +9,16 @@ import time
 import pickle
 import os
 import nltk
-
 from nltk.tokenize import word_tokenize
-from joblib import dump, load
+
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
-def load_data(fast_coeff : int):
+
+def load_data(fast_coeff : int, random_state, test_size : float):
     X_train = pd.read_csv(
         "/Users/welto/Library/CloudStorage/OneDrive-CentraleSupelec/2A/CASA/RakutenPjct/data/X_train_update.csv",
-        sep=',',
-        usecols=lambda column: column not in [
-            'Unnamed: 0',
-            'imageid',
-            'description'
-        ]
-    )
-    X_test_challenge = pd.read_csv(
-        "/Users/welto/Library/CloudStorage/OneDrive-CentraleSupelec/2A/CASA/RakutenPjct/data/X_test_update.csv",
         sep=',',
         usecols=lambda column: column not in [
             'Unnamed: 0',
@@ -40,13 +31,19 @@ def load_data(fast_coeff : int):
         sep=',',
         usecols=lambda column: column != 'Unnamed: 0'
     )
-
+    X_train, X_test, Y_train, Y_test = train_test_split(
+        X_train,
+        Y_train,
+        test_size=test_size,
+        random_state=random_state
+    )
     X_train = X_train['designation'][:X_train.shape[0]//fast_coeff].tolist()
-    X_test_challenge = X_test_challenge['designation'][:X_test_challenge.shape[0]//fast_coeff].tolist()
+    X_test = X_test['designation'][:X_test.shape[0]//fast_coeff].tolist()
 
     Y_train = Y_train['prdtypecode'][:Y_train.shape[0]//fast_coeff].tolist()
+    Y_test = Y_test['prdtypecode'][:Y_test.shape[0]//fast_coeff].tolist()
 
-    return X_train, X_test_challenge, Y_train
+    return X_train, X_test, Y_train, Y_test
 def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
     if os.path.exists(train_filename) and os.path.exists(test_filename):
         return load_tokenized_data(train_filename, test_filename)
@@ -54,7 +51,7 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
     nltk.download("punkt")
 
     X_train_clean = []
-    X_test_challenge_clean = []
+    X_test_clean = []
 
     a = len(X_train)
     b = len(X_test)
@@ -70,10 +67,7 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
     preprocessing_start_time = time.time()
 
     for k in range(a):
-        tokens = word_tokenize(
-            X_train[k],
-            language='french'
-        )
+        tokens = word_tokenize(X_train[k], language='french')
         X_train_clean.append(tokens)
         header.progress_bar(
             k + 1,
@@ -84,11 +78,8 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
         )
 
     for k in range(b):
-        tokens = word_tokenize(
-            X_test[k],
-            language='french'
-        )
-        X_test_challenge_clean.append(tokens)
+        tokens = word_tokenize(X_test[k], language='french')
+        X_test_clean.append(tokens)
         header.progress_bar(
             k + 1,
             b,
@@ -103,20 +94,22 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
 
     print(f"Preprocessed in {int(preprocessing_time_h)}h {int(preprocessing_time_min)}min {int(preprocessing_time_s)}s")
 
-    save_tokenized_data(X_train_clean, X_test_challenge_clean, train_filename, test_filename)
+    save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename)
 
-    return X_train_clean, X_test_challenge_clean
-def vectorize_data(X_train_clean, X_test_challenge_clean):
+    return X_train_clean, X_test_clean
+
+def vectorize_data(X_train_clean, X_test_clean):
     tfidf = TfidfVectorizer()
 
-    X_train_clean = [' '.join(tokens) for tokens in X_train_clean]
-    X_test_challenge_clean = [' '.join(tokens) for tokens in X_test_challenge_clean]
+    # Join tokens back into strings
+    X_train_strings = [' '.join(tokens) for tokens in X_train_clean]
+    X_test_strings = [' '.join(tokens) for tokens in X_test_clean]
 
-    X_train_tfidf = tfidf.fit_transform(X_train_clean)
-    X_test_tfidf = tfidf.transform(X_test_challenge_clean)
+    X_train_tfidf = tfidf.fit_transform(X_train_strings)
+    X_test_tfidf = tfidf.transform(X_test_strings)
 
     return X_train_tfidf, X_test_tfidf
-def save_tokenized_data(X_train_clean, X_test_challenge_clean, train_filename, test_challenge_filename):
+def save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename):
     with open(
             train_filename,
             'wb'
@@ -125,34 +118,41 @@ def save_tokenized_data(X_train_clean, X_test_challenge_clean, train_filename, t
             X_train_clean,
             f
         )
-
     with open(
-            test_challenge_filename,
+            test_filename,
             'wb'
     ) as f:
         pickle.dump(
-            X_test_challenge_clean,
+            X_test_clean,
             f
         )
-def load_tokenized_data(train_filename, test_challenge_filename):
+def load_tokenized_data(train_filename, test_filename):
     with open(
             train_filename,
             'rb'
     ) as f:
         X_train_clean = pickle.load(f)
-
     with open(
-            test_challenge_filename,
+            test_filename,
             'rb'
     ) as f:
-        X_test_challenge_clean = pickle.load(f)
-    return X_train_clean, X_test_challenge_clean
+        X_test_clean = pickle.load(f)
+    return X_train_clean, X_test_clean
 def train_model(X_train_tfidf, Y_train):
+    # best_params
     param_grid = {
-        'C': 8.071428571428571,
+        'C': 8.071428571428571, #np.linspace(1, 100, 15), #8.071428571428571
         'gamma': 0.1,
-        'kernel': 'rbf'
+        'kernel':'rbf'
     }
+    """svm = GridSearchCV(
+        SVC(kernel='rbf'),
+        n_jobs=-1,
+        refit=True,
+        param_grid=param_grid,
+        cv=10,
+        verbose=10
+    )"""
     svm = SVC(
         C=param_grid['C'],
         gamma=param_grid['gamma'],
@@ -162,27 +162,57 @@ def train_model(X_train_tfidf, Y_train):
         X_train_tfidf,
         Y_train
     )
+
+    """best_params = svm.best_params_
+
+    print(
+        "best params :",
+        best_params
+    )
+
+    svm = SVC(
+        C=best_params['C'],
+        gamma=best_params['gamma'],
+        kernel='rbf'
+    )
+    svm.fit(
+        X_train_tfidf,
+        Y_train
+    )"""
     return svm
 
-def main(fast_coeff : int):
+def evaluate_model(model, X_test_tfidf, Y_test):
+    Y_pred = model.predict(X_test_tfidf)
+
+    f1 = f1_score(
+        Y_test,
+        Y_pred,
+        average='macro'
+    )
+    accuracy = accuracy_score(
+        Y_test,
+        Y_pred
+    )
+    return f1, accuracy, Y_pred
+def main(fast_coeff : int, random_state : int, test_size : float):
     exec_time_start = time.time()
     warnings.filterwarnings("ignore")
 
     train_filename = 'X_train_clean.pkl'
-    test_challenge_filename = 'X_test_challenge_clean.pkl'
+    test_filename = 'X_test_clean.pkl'
 
-    X_train, X_test_challenge, Y_train = load_data(fast_coeff)
+    X_train, X_test, Y_train, Y_test = load_data(fast_coeff, random_state, test_size)
 
-    X_train_clean, X_test_challenge_clean = tokenise_cleaning_data(
+    X_train_clean, X_test_clean = tokenise_cleaning_data(
         X_train,
-        X_test_challenge,
+        X_test,
         train_filename,
-        test_challenge_filename
+        test_filename
     )
 
-    X_train_tfidf, X_test_challenge_tfidf = vectorize_data(
+    X_train_tfidf, X_test_tfidf = vectorize_data(
         X_train_clean,
-        X_test_challenge_clean
+        X_test_clean
     )
 
     model = train_model(
@@ -190,15 +220,31 @@ def main(fast_coeff : int):
         Y_train
     )
 
-    Y_pred_challenge = model.predict(X_test_challenge_tfidf)
+    f1, accuracy, Y_pred_svm = evaluate_model(
+        model,
+        X_test_tfidf,
+        Y_test
+    )
 
-    header.Save_label_output(Y_pred_challenge, len(X_train_clean))
+    print(
+        "f1 score:",
+        f1
+    )
+    print(
+        "accuracy score:",
+        accuracy
+    )
+
+
+    #header.Save_label_output(Y_pred_svm, len(X_train_clean))
 
     exec_time_end = time.time()
     exec_time_h, exec_time_min, exec_time_s = header.convert_seconds(exec_time_end - exec_time_start)
     print(f"Executed in {int(exec_time_h)}h {int(exec_time_min)}min {int(exec_time_s)}s")
 
 if __name__ == "__main__":
-    main(fast_coeff=1)
-
-
+    main(
+        fast_coeff=1,
+        random_state=53, #53 (random_state qui semble maximiser le f1 score)
+        test_size=0.2
+    )
