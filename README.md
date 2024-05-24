@@ -19,8 +19,18 @@ Nous avons séparé le projet en plusieurs parties **distingues** mais pour auta
 La dernière version du projet (e1r0) propose un **f1_score** de **0.8256**, obtenu avec la méthode SVM 
 ## Setup
 
-Plusieurs bibliothèques sont nécessaires afin de faire tourner correctement le repository : 
+### Prérequis
+- Python 3.8+
+- pip
 
+### Installation des dépendances
+
+Clonez le dépôt et installez les dépendances :
+
+```bash
+git clone https://github.com/votre-utilisateur/nom-du-projet.git
+cd nom-du-projet
+pip install -r requirements.txt
 
 ## Run 
 
