@@ -32,7 +32,7 @@ git clone https://github.com/6racuse/RakutenPjct.git
 cd RakutenPjct
 pip install -r requirements.txt
 ```
-Même si le code gère l'instalation des ressources nltk, nous recommandons d'exécuter les instructions suivantes :
+Même si le code gère l'installation des ressources nltk, nous recommandons d'exécuter les instructions suivantes :
 
 ```python
 import nltk
