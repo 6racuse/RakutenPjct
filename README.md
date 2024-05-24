@@ -1,5 +1,6 @@
 # RakutenPjct
 
+![image](https://github.com/6racuse/RakutenPjct/assets/148326846/e2cf9726-7cb7-425f-9e2d-25dfe8a69c42)
 
 Ce projet a pour étude le dataset proposé dans le cadre du **Rakuten France Multimodal Product Data Classification Project**, proposé par Rakuten Institute of Technology, Paris et lancé le 6 janvier 2020. Ce défi se concentre sur la classification multimodale (texte et image) à grande échelle des codes types de produits, avec pour objectif de prédire le code type de chaque produit tel que défini dans le catalogue de Rakuten France.
 
