@@ -7,9 +7,9 @@ Nous, Welto et Alexis, proposons ici une solution viable au regard de nos connai
 
 - [Résultats](#Résultats)
 - [Setup](#Setup)
-- [Run It !](#Run It !)
-- [Project History](#Project History)
-- 
+- [Run](#Run)
+- [History](#History)
+
 Nous avons séparé le projet en plusieurs parties **distingues** mais pour autant **complémentaires** : 
 - Préprocessing, Feature engineering, Affichage des données et compréhension du jeu de données.
 - Elaboration d'un éventail des méthodes potentiellement viables pour répondre au problème
@@ -22,11 +22,11 @@ La dernière version du projet (e1r0) propose un **f1_score** de **0.8256**, obt
 Plusieurs bibliothèques sont nécessaires afin de faire tourner correctement le repository : 
 
 
-## Run It ! 
+## Run 
 
 
 
-## Project History
+## History
 Ici est récaptilé l'avancé du projet pour chacun des membres du groupe
 ### Alexis CHATAIL--RIGOLLEAU
 - **15/05** : lancement du projet, préprocessing de la donnée textuelle "designation", récupération de la matrice TFIDF.
