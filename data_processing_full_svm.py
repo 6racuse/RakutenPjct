@@ -146,7 +146,7 @@ def load_tokenized_data(train_filename, test_challenge_filename):
     return X_train_clean, X_test_challenge_clean
 def train_model(X_train_tfidf, Y_train):
     param_grid = {
-        'C': 8.916666666666668,
+        'C': 8.071428571428571,
         'gamma': 0.1,
         'kernel': 'rbf'
     }

@@ -143,28 +143,28 @@ def load_tokenized_data(train_filename, test_filename):
 def train_model(X_train_tfidf, Y_train):
     # best_params
     param_grid = {
-        'C': 8.916666666666668, # np.linspace(6, 11, 25),
-        'gamma': 0.1,
-        'kernel':'rbf'
+        'C': np.linspace(1, 100, 15), #8.071428571428571
+        'gamma': [0.1],
+        #'kernel':'rbf'
     }
-    """svm = GridSearchCV(
-        SVC(),
+    svm = GridSearchCV(
+        SVC(kernel='rbf'),
         n_jobs=-1,
         refit=True,
         param_grid=param_grid,
-        cv=5,
+        cv=10,
         verbose=10
-    )"""
-    svm = SVC(
+    )
+    """svm = SVC(
         C=param_grid['C'],
         gamma=param_grid['gamma'],
         kernel=param_grid['kernel']
-    )
+    )"""
     svm.fit(
         X_train_tfidf,
         Y_train
     )
-    """best_params = svm.best_params_
+    best_params = svm.best_params_
 
     print(
         "best params :",
@@ -174,11 +174,12 @@ def train_model(X_train_tfidf, Y_train):
     svm = SVC(
         C=best_params['C'],
         gamma=best_params['gamma'],
+        kernel='rbf'
     )
     svm.fit(
         X_train_tfidf,
         Y_train
-    )"""
+    )
     return svm
 
 def evaluate_model(model, X_test_tfidf, Y_test):
