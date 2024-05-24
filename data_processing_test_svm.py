@@ -11,6 +11,7 @@ import pickle
 import os
 import nltk
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, f1_score
@@ -50,6 +51,9 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
         return load_tokenized_data(train_filename, test_filename)
 
     nltk.download("punkt")
+    nltk.download("stopwords")
+
+    stop_words = set(stopwords.words('french'))
 
     X_train_clean = []
     X_test_clean = []
@@ -74,7 +78,7 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
             ),
             language='french'
         )
-        tokens = [word for word in tokens if word not in string.punctuation]
+        tokens = [word for word in tokens if word not in string.punctuation and word not in stop_words]
         X_train_clean.append(tokens)
         header.progress_bar(
             k + 1,
@@ -91,7 +95,7 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
             ),
             language='french'
         )
-        tokens = [word for word in tokens if word not in string.punctuation]
+        tokens = [word for word in tokens if word not in string.punctuation and word not in stop_words]
         X_test_clean.append(tokens)
         header.progress_bar(
             k + 1,
@@ -106,7 +110,8 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
 
     preprocessing_end_time = time.time()
     preprocessing_time_h, preprocessing_time_min, preprocessing_time_s = header.convert_seconds(
-        preprocessing_end_time - preprocessing_start_time)
+        preprocessing_end_time - preprocessing_start_time
+    )
 
     print(f"Preprocessed in {int(preprocessing_time_h)}h {int(preprocessing_time_min)}min {int(preprocessing_time_s)}s")
 
@@ -153,29 +158,29 @@ def load_tokenized_data(train_filename, test_filename):
 def train_model(X_train_tfidf, Y_train):
     # best_params
     param_grid = {
-        'C': 8.071428571428571, #np.linspace(1, 100, 15), #8.071428571428571
-        'gamma': 0.1,
-        'kernel':'rbf'
+        'C': np.linspace(1, 100), #8.071428571428571
+        'gamma': np.linspace(0.1, 5),
+        'kernel': ['rbf']
     }
-    """svm = GridSearchCV(
+    svm = GridSearchCV(
         SVC(kernel='rbf'),
         n_jobs=-1,
         refit=True,
         param_grid=param_grid,
         cv=10,
         verbose=10
-    )"""
-    svm = SVC(
+    )
+    """svm = SVC(
         C=param_grid['C'],
         gamma=param_grid['gamma'],
         kernel=param_grid['kernel']
-    )
+    )"""
     svm.fit(
         X_train_tfidf,
         Y_train
     )
 
-    """best_params = svm.best_params_
+    best_params = svm.best_params_
 
     print(
         "best params :",
@@ -190,7 +195,7 @@ def train_model(X_train_tfidf, Y_train):
     svm.fit(
         X_train_tfidf,
         Y_train
-    )"""
+    )
     return svm
 
 def evaluate_model(model, X_test_tfidf, Y_test):
@@ -255,7 +260,7 @@ def main(fast_coeff : int, random_state : int, test_size : float):
 
 if __name__ == "__main__":
     main(
-        fast_coeff=1,
+        fast_coeff=100,
         random_state=53, #53 (random_state qui semble maximiser le f1 score)
         test_size=0.2
     )
