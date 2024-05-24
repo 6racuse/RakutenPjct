@@ -186,13 +186,13 @@ def Preprocess_dataset(Force_Reload):
         #la boucle suivante prend bcp de temps
         for k in range(len(raw_data_test)):
             if k not in nan_indices_list:
-                processed_text = preprocess_text(descrip[raw_data_test.axes[0][0]+k], language='french')
+                processed_text = preprocess_text(descrip_test[raw_data_test.axes[0][0]+k], language='french')
                 X_data_test_descrip.append(processed_text)
                 # X_data_test_descrip.append(raw_to_tokens(remove_html_tags(descrip_test[raw_data_test.axes[0][0]+k]),spacy_nlp))
             else:
                 X_data_test_descrip.append("")
                 
-            processed_text = preprocess_text(design[raw_data_test.axes[0][0]+k], language='french')
+            processed_text = preprocess_text(design_test[raw_data_test.axes[0][0]+k], language='french')
             X_data_test_design.append(processed_text)
             # X_data_test_design.append(raw_to_tokens(design_test[raw_data_test.axes[0][0]+k],spacy_nlp))
             progress_bar(k + 1,len(raw_data_test), prefix='Récupération X_test: ', suffix='Complété', length=50)
