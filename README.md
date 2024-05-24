@@ -10,8 +10,11 @@ Nous avons séparé le projet en plusieurs parties **distingues** mais pour auta
 - Elaboration d'un éventail des méthodes potentiellement viables pour répondre au problème
 - Proposition d'un modèle couplé complexe permettant d'obtenir la meilleure réponse au problème
 
-  
+## Résultats
+La dernière version du projet (e1r0) propose un **f1_score** de **0.8256**, obtenu avec la méthode SVM 
 ## Setup
+
+Plusieurs bibliothèques sont nécessaires afin de faire tourner correctement le repository : 
 
 
 ## Run It ! 
