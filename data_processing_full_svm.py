@@ -54,7 +54,7 @@ def load_data(fast_coeff : int):
 
     return X_train, X_test_challenge, Y_train
 
-def preprocess_text(text):
+def tokenizer(text):
     download_nltk_data()
 
     stop_words = set(
@@ -71,17 +71,17 @@ def preprocess_text(text):
 
     return ' '.join(tokens)
 
-def train_model(X_train, Y_train):
+def pipeline_train_model(X_train, Y_train):
     params = {
         'C': 8.071428571428571,
-        'gamma': 0.1,
+        'gamma': 0.15,
         'kernel': 'rbf'
     }
     pipeline = Pipeline([
         (
             'preprocessor',
             TfidfVectorizer(
-                preprocessor=preprocess_text
+                preprocessor=tokenizer
             )
         ),
         (
@@ -105,11 +105,25 @@ def main(fast_coeff : int):
     exec_time_start = time.time()
     warnings.filterwarnings("ignore")
 
+    load_time_start = time.time()
     X_train, X_test_challenge, Y_train = load_data(fast_coeff)
+    load_time_end = time.time()
+    load_time_h, load_time_min, load_time_s, load_time_ms = header.convert_seconds(load_time_end - load_time_start)
 
-    model = train_model(
+    print(
+        f"Data loaded in {int(load_time_h)}h {int(load_time_min)}min {int(load_time_s)}s {int(load_time_ms)}ms"
+    )
+
+    process_time_start = time.time()
+    model = pipeline_train_model(
         X_train,
         Y_train
+    )
+    process_time_end = time.time()
+    process_time_h, process_time_min, process_time_s, process_time_ms = header.convert_seconds(process_time_end - process_time_start)
+
+    print(
+        f"Data processed and model trained in {int(process_time_h)}h {int(process_time_min)}min {int(process_time_s)}s {int(process_time_ms)}ms"
     )
 
     Y_pred = model.predict(X_test_challenge)
@@ -120,11 +134,12 @@ def main(fast_coeff : int):
     )
 
     exec_time_end = time.time()
-    exec_time_h, exec_time_min, exec_time_s = header.convert_seconds(exec_time_end - exec_time_start)
+    exec_time_h, exec_time_min, exec_time_s, exec_time_ms = header.convert_seconds(exec_time_end - exec_time_start)
 
     print(
-        f"Executed in {int(exec_time_h)}h {int(exec_time_min)}min {int(exec_time_s)}s"
+        f"Executed in {int(exec_time_h)}h {int(exec_time_min)}min {int(exec_time_s)}s {int(exec_time_ms)}ms"
     )
 
 if __name__ == "__main__":
     main(fast_coeff=1)
+
