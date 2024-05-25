@@ -17,12 +17,9 @@ def main():
         clean_console()
         print("Collecting dataset ...")
         
-        if Reload_data=='yes':
+        if Reload_data=='yes' or Reload_data=='no':
             X_data,y_data,X_test = Preprocess_dataset(Reload_data=='yes')
-            break;
-        elif Reload_data=='no':
-            X_data,y_data,X_test = Preprocess_dataset(Reload_data=='yes')
-            break;
+            break
         else:
             print("wrong input")
         
