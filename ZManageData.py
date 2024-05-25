@@ -8,6 +8,11 @@ def clean_console():
         
 
 
+
+
+
+
+
 def Get_dataset():
     """récupère le jeu de données train
 
@@ -24,10 +29,10 @@ def Get_dataset():
     return raw_data,y_data
         
 
-def Save_label_output(y_pred_labels,len_X_train):
+def Save_label_output(y_pred_labels,len_X_train,filename):
     from csv import writer
 
-    filename = '.\output\ylabel_nn.csv'
+    
     # Écriture de la liste dans le fichier CSV
     with open(filename, mode='w', newline='') as file:
         writer = writer(file, lineterminator='\n')
@@ -54,8 +59,7 @@ def Preprocess_dataset(Force_Reload):
     spacy_nlp = load("fr_core_news_sm")
            
     if Must_Reload or Force_Reload:
-        X_data_design = []
-        X_data_descrip = []
+        X_data_design,X_data_descrip = [],[]
         raw_data,y_data = Get_dataset()
         design = raw_data['designation']
         # descrip = raw_data['description']
@@ -91,11 +95,11 @@ def Preprocess_dataset(Force_Reload):
         #la boucle suivante prend bcp de temps
         for k in range(len(raw_data_test)):
             X_data_test.append(raw_to_tokens(design_test[len(X_data_design)+k],spacy_nlp))
-            progress_bar(k + 1,len(raw_data_test), prefix='Récupération X_test: ', suffix='Complété', length=50)
+            progress_bar(k + 1,len(raw_data_test), prefix='Récupération X_test:', suffix='Complété', length=50)
         mdic = {"data": X_data_test}
         savemat(mat_filename_t,mdic)       
     else:
-        X_data_test = loadmat(mat_filename)['data']
+        X_data_test = loadmat(mat_filename_t)['data']
         
         
     clean_console()
