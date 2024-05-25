@@ -11,14 +11,44 @@ def main():
     filterwarnings("ignore")
     clean_console()
     
+    mat_filename_train_tfidf = '.\data\X_train_design_tfidf.mat'
+    mat_filename_test_tfidf = '.\data\X_test_design_tfidf.mat'
+    mat_filename_train   = '.\data\X_train_design.mat'
+    mat_filename_test   = '.\data\X_test_design.mat'
+    mat_filename_labels= '.\data\ylabels.mat'
+    
     while True:
         clean_console()
         Reload_data = input("Reload dataset - mandatory if the entire folder hasn't been imported - (yes/no) : ")
         clean_console()
         print("Collecting dataset ...")
         
-        if Reload_data=='yes' or Reload_data=='no':
-            X_data,y_data,X_test = Preprocess_dataset(Reload_data=='yes')
+        if Reload_data=='yes':
+            X_train,y_data,X_test = Preprocess_dataset()
+
+            mdic_train = {"data": X_train}
+            savemat(mat_filename_train,mdic_train)
+            mdic_test = {"data": X_test}
+            savemat(mat_filename_test,mdic_test)
+            mdic_labels = {"data": y_data}
+            savemat(mat_filename_test,mdic_labels)
+            
+            tfidf = TfidfVectorizer()
+            X_train_tfidf = tfidf.fit_transform(X_train)
+            X_test_tfidf = tfidf.transform(X_test)
+            
+            mdic_train = {"data": X_train_tfidf}
+            savemat(mat_filename_train_tfidf,mdic_train)
+            
+            mdic = {"data": X_test_tfidf}
+            savemat(mat_filename_test_tfidf,mdic)      
+            break
+        elif Reload_data=='no':
+            X_train_tfidf   =loadmat(mat_filename_train_tfidf)
+            X_test_tfidf    =loadmat(mat_filename_test_tfidf)
+            X_train         =loadmat(mat_filename_train)['data']  
+            X_test          =loadmat(mat_filename_test)['data']
+            y_data          =loadmat(mat_filename_labels)['data']          
             break
         else:
             print("wrong input")
@@ -31,10 +61,8 @@ def main():
     submit = int(input("Choice : "))
     clean_console()
     
-    tfidf = TfidfVectorizer()
     
-    X_train_tfidf = tfidf.fit_transform(X_data)
-    X_test_tfidf = tfidf.transform(X_test)
+    
         
     if (Model_Map.MODEL_NN.value==submit):
         from ZNN import train__,f1_m,predict_labels
@@ -54,16 +82,16 @@ def main():
         elif DoReload=='yes':    
             nn_pipeline = Pipeline([
                 ('tfidf', TfidfVectorizer()),
-                ('model', train__())
+                ('model', train__(X_train_tfidf,y_train_encoded))
             ])
             
-            nn_pipeline.fit(X_data, y_train_encoded)
+            nn_pipeline.fit(X_train, y_train_encoded)
             best_model = nn_pipeline.named_steps['model']
         else:
             return 0
         
         y_test_pred_nn = predict_labels(best_model, X_test_tfidf, label_encoder)
-        Save_label_output(y_test_pred_nn,len(X_data),'output_nn.csv')
+        Save_label_output(y_test_pred_nn,len(X_train),'output_nn.csv')
         
     if (Model_Map.MODEL_SVM.value==int(submit)):
         from ZSVM import train_model
@@ -97,6 +125,7 @@ if __name__ == '__main__':
     clean_console()
     from warnings import filterwarnings
     import tensorflow as tf
+    from scipy.io import savemat,loadmat
     from ZManageData import Preprocess_dataset
     from sklearn.feature_extraction.text import TfidfVectorizer
     
