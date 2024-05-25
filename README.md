@@ -16,7 +16,7 @@ Nous avons séparé le projet en plusieurs parties **distingues** mais pour auta
 - Proposition d'un modèle couplé complexe permettant d'obtenir la meilleure réponse au problème
 
 ## Résultats
-La dernière version du projet (e1r0) propose un **f1_score** de **0.8256**, obtenu avec la méthode SVM 
+La dernière version du projet (**e2r0**) propose un **f1_score** de **0.8256**, obtenu avec la méthode SVM, avec les hyperparamètres `C=8.071428571428571, gamma=0.1, kerrnel:'rbf' `
 ## Setup
 
 ### Prérequis
