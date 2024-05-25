@@ -1,7 +1,6 @@
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 
 from sklearn.preprocessing import LabelEncoder
-
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, BatchNormalization
 from tensorflow.keras.utils import to_categorical
@@ -9,7 +8,16 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCh
 import tensorflow as tf
 from tensorflow.keras import backend as K
 import numpy as np
-from scipy.io import savemat
+
+def MustRelloadNN():
+    from os.path import exists
+    mat_filename = '.\models\\best_model.keras'
+    Must_Reload = not exists(mat_filename)
+    if (Must_Reload):
+        return True
+    else:
+        return False
+    
 
 # Enregistrer la fonction f1_score
 @tf.keras.utils.register_keras_serializable()

@@ -1,4 +1,4 @@
-import header
+
 
 import numpy as np
 import pandas as pd
@@ -14,6 +14,34 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 
+
+def LaunchSVM_Model(X_data_tfidf,y_data):
+    from os.path import exists
+    from ZGlobal_parameter import Error_Map
+    Bypass_bool = input("Bypass learning process - this directly loads the best_model_nn from memory - (yes/no) : ")
+    mat_filename = '.\models\\best_model.keras'
+    Must_Reload = not exists(mat_filename)
+    
+    
+    if (Bypass_bool == 'no' or Must_Reload):
+        model = train_model(X_data_tfidf, y_data)
+    elif Bypass_bool == 'yes':
+        model = Bypass_train_svm()
+    else:
+        print("wrong input")
+        return Error_Map.TYPE_ERROR_INPUT.value
+
+    model.load_weights('.\models\\best_model_svm.keras')
+    return model
+
+def Get_SVM_Prediction(SVM_model,X_test_design):
+    
+    SVM_model.load_weights('.\models\\best_model_svm.keras')
+    SVM_model.predict()
+
+def Bypass_train_svm():
+    from joblib import load
+    return load('.\models\\best_model_svm.keras')
 
 
 def train_model(X_train_tfidf, Y_train):
