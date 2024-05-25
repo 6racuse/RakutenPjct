@@ -31,7 +31,7 @@ def main():
             mdic_test = {"data": X_test}
             savemat(mat_filename_test,mdic_test)
             mdic_labels = {"data": y_data}
-            savemat(mat_filename_test,mdic_labels)
+            savemat(mat_filename_labels,mdic_labels)
             
             tfidf = TfidfVectorizer()
             X_train_tfidf = tfidf.fit_transform(X_train)
@@ -44,11 +44,11 @@ def main():
             savemat(mat_filename_test_tfidf,mdic)      
             break
         elif Reload_data=='no':
-            X_train_tfidf   =loadmat(mat_filename_train_tfidf)
-            X_test_tfidf    =loadmat(mat_filename_test_tfidf)
+            X_train_tfidf   =loadmat(mat_filename_train_tfidf)['data']
+            X_test_tfidf    =loadmat(mat_filename_test_tfidf)['data']
             X_train         =loadmat(mat_filename_train)['data']  
             X_test          =loadmat(mat_filename_test)['data']
-            y_data          =loadmat(mat_filename_labels)['data']          
+            y_data          =ravel(loadmat(mat_filename_labels)['data'])          
             break
         else:
             print("wrong input")
@@ -82,7 +82,7 @@ def main():
         elif DoReload=='yes':    
             nn_pipeline = Pipeline([
                 ('tfidf', TfidfVectorizer()),
-                ('model', train__(X_train_tfidf,y_train_encoded))
+                ('model', train__(X_train_tfidf, y_train_encoded))
             ])
             
             nn_pipeline.fit(X_train, y_train_encoded)
@@ -110,7 +110,7 @@ def main():
         else:
             return 0
         y_test_pred_svm = best_model.predict(X_test_tfidf)
-        Save_label_output(y_test_pred_svm,len(X_data),'output_svm.csv')
+        Save_label_output(y_test_pred_svm,len(X_train_tfidf),'output_svm.csv')
 
 
         
@@ -128,5 +128,5 @@ if __name__ == '__main__':
     from scipy.io import savemat,loadmat
     from ZManageData import Preprocess_dataset
     from sklearn.feature_extraction.text import TfidfVectorizer
-    
+    from numpy import ravel
     main()
