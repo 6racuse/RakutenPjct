@@ -13,7 +13,8 @@ def convert_seconds(seconds):
     hours = seconds // 3600
     minutes = (seconds % 3600) // 60
     secs = seconds % 60
-    return hours, minutes, secs
+    milliseconds = (seconds - int(seconds)) * 1000
+    return hours, minutes, secs, milliseconds
 
         
 def raw_to_tokens(raw_string, spacy_nlp):

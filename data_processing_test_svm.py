@@ -109,11 +109,11 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
     X_test_clean = [' '.join(tokens) for tokens in X_test_clean]
 
     preprocessing_end_time = time.time()
-    preprocessing_time_h, preprocessing_time_min, preprocessing_time_s = header.convert_seconds(
+    preprocessing_time_h, preprocessing_time_min, preprocessing_time_s, preprocessing_time_ms = header.convert_seconds(
         preprocessing_end_time - preprocessing_start_time
     )
 
-    print(f"Preprocessed in {int(preprocessing_time_h)}h {int(preprocessing_time_min)}min {int(preprocessing_time_s)}s")
+    print(f"Preprocessed in {int(preprocessing_time_h)}h {int(preprocessing_time_min)}min {int(preprocessing_time_s)}s {int(preprocessing_time_ms)}ms")
 
     save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename)
 
@@ -156,20 +156,12 @@ def load_tokenized_data(train_filename, test_filename):
         X_test_clean = pickle.load(f)
     return X_train_clean, X_test_clean
 def train_model(X_train_tfidf, Y_train):
-    # best_params
     param_grid = {
         'C': 8.071428571428571, #np.linspace(5, 10, 5), #8.071428571428571,  ,
-        'gamma': 0.1,
+        'gamma': 0.13,
         'kernel': 'rbf'
     }
-    """svm = GridSearchCV(
-        SVC(kernel='rbf'),
-        n_jobs=-1,
-        refit=True,
-        param_grid=param_grid,
-        cv=10,
-        verbose=10
-    )"""
+
     svm = SVC(
         C=param_grid['C'],
         gamma=param_grid['gamma'],
@@ -180,22 +172,6 @@ def train_model(X_train_tfidf, Y_train):
         Y_train
     )
 
-    """best_params = svm.best_params_
-
-    print(
-        "best params :",
-        best_params
-    )
-
-    svm = SVC(
-        C=best_params['C'],
-        gamma=best_params['gamma'],
-        kernel='rbf'
-    )
-    svm.fit(
-        X_train_tfidf,
-        Y_train
-    )"""
     return svm
 
 def evaluate_model(model, X_test_tfidf, Y_test):
@@ -255,8 +231,8 @@ def main(fast_coeff : int, random_state : int, test_size : float):
     #header.Save_label_output(Y_pred_svm, len(X_train_clean))
 
     exec_time_end = time.time()
-    exec_time_h, exec_time_min, exec_time_s = header.convert_seconds(exec_time_end - exec_time_start)
-    print(f"Executed in {int(exec_time_h)}h {int(exec_time_min)}min {int(exec_time_s)}s")
+    exec_time_h, exec_time_min, exec_time_s, exec_time_ms = header.convert_seconds(exec_time_end - exec_time_start)
+    print(f"Executed in {int(exec_time_h)}h {int(exec_time_min)}min {int(exec_time_s)}s {int(exec_time_ms)}ms")
 
 if __name__ == "__main__":
     main(
