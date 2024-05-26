@@ -105,7 +105,18 @@ Ici est récaptilé l'avancé du projet pour chacun des membres du groupe
 ## Exemples
 
 ### Use Case 1 : Neural Network model 
-Après avoir lancé le programme, sur la [fenêtre de sélection](#Run)
+Après avoir lancé le programme, sur l' [onglet de sélection](#Run), rentrer :
+```PS
+Choix : 1
+```
+Puis la fenêtre suivante apparaît :
+```PS
+Reload neural network model - mandatory if best_model.keras doesn't exist - (yes/no) ? : 
+```
+- **yes** recrée l'entrainnement du réseau de neurones.
+- **no**  charge le model entrainné s'il est présent en mémoire, sinon il relance l'entrainnement du réseau de neurones
+
+Une fois le choix fait, le programme effectue la prédiction des labels, et les stocke dans le fichier **output_nn.csv** du répertoire **output**. Le modèle entrainné peut être récupéré sous le nom de **nn_model.keras** dans le répertoire **models**
 
 
 ## Contacts
