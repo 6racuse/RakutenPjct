@@ -42,6 +42,8 @@ nltk.download('punkt')
 nltk.download('stopwords')
 ```
 
+Vérifier les chemins d'accès sont bons : / et \ 
+
 ### Récupération des modèles
 
 **Le repository ne comprend pas les modèles pré-entrainnés** 
