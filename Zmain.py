@@ -1,7 +1,3 @@
-
-
-
-
 def print_title():
     print("  _______          __               _                           _      _____      _______                   _               _    ")
     print(" |_   __ \        [  |  _          / |_                        / \    |_   _|    |_   __ \                 (_)             / |_  ")
@@ -11,7 +7,6 @@ def print_title():
     print(" |____| |___\\'-;__[__|  \_]'.__.'_/\__/ '.__.'[___||__]   |____| |____|_____|    |_____| [___]   '.__.'[ \_| |'.__.''.___.'\__/  ")
     print("                                                                                                        \____/                   ")
     return 0
-
 def print_choice():
     
     print("")
@@ -19,14 +14,11 @@ def print_choice():
     print("")
     print("     1 - Neural Network (f1-score 0.808) ")
     print("     2 - SVM (f1-score 0.8256) ")
-    print("     3 - KNN (f1-score 0.69)")
-    print("     4 - Solution to the project")
+    print("     3 - KNN (f1-score 0.7113)")
+    print("     4 - Solution to the project (f1-score 0.8118")
     print("")
     submit = int(input("Choix : "))
     return submit
-
-
-
 def main():
     filterwarnings("ignore")
     # clean_console()
@@ -40,10 +32,8 @@ def main():
     print_title()
     submit = print_choice()
     clean_console()
-    
-    
-    
-        
+
+
     if (Model_Map.MODEL_NN.value==submit):
         from ZNN import train__,f1_m,predict_labels
         from sklearn.pipeline import Pipeline
@@ -75,7 +65,6 @@ def main():
     if (Model_Map.MODEL_SVM.value==int(submit)):
         from ZSVM import train_model
         from joblib import load,dump
-        
         
         DoReload = input("Reload SVM model - mandatory if svm_model.joblib doesn't exist - (yes/no) ? : ")
         
@@ -171,14 +160,13 @@ def main():
         y_test_pred_knn = best_model.predict(X_test_tfidf)
         Save_label_output(y_test_pred_knn, len(X_train), './output/output_knn.csv')
 
-
-
-
+        Save_label_output(
+            weighted_vote_prediction(y_test_pred_nn, y_test_pred_svm, y_test_pred_knn),
+            len(X_train),
+            './output/output_weighted_vote.csv'
+        )
         
     return 0
-
-
-
 
 if __name__ == '__main__':
     from ZManageData import clean_console,Save_label_output

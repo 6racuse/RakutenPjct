@@ -1,24 +1,10 @@
-from sklearn.metrics import f1_score
-import numpy as np
 from collections import Counter
 
-def weighted_vote_prediction(y_test, y_pred_nn, y_pred_svm, y_pred_knn):
+def weighted_vote_prediction(y_pred_nn, y_pred_svm, y_pred_knn):
 
-    f1_nn = f1_score(
-        y_test,
-        y_pred_nn,
-        average='macro'
-    )
-    f1_svm = f1_score(
-        y_test,
-        y_pred_svm,
-        average='macro'
-    )
-    f1_knn = f1_score(
-        y_test,
-        y_pred_knn,
-        average='macro'
-    )
+    f1_nn = 0.808
+    f1_svm = 0.8256
+    f1_knn = 0.7113
 
     total = f1_nn + f1_svm + f1_knn
     weight_nn = f1_nn / total

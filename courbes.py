@@ -1,20 +1,21 @@
+import matplotlib.pyplot as plt
+import Zmain
+import pandas as pd
+import nltk
+import time
+import string
+import numpy as np
+
 from ZManageData import progress_bar, normalize_accent
 from sklearn.metrics import f1_score
-import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
-import Zmain
 from ZManageData import Preprocess_dataset
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
-import pandas as pd
-import nltk
 from nltk.tokenize import word_tokenize
-import time
 from nltk.corpus import stopwords
-import string
 from sklearn.svm import SVC
-import numpy as np
-
+from sklearn.metrics import f1_score
 
 def convert_seconds(seconds):
     hours = seconds // 3600
@@ -22,26 +23,25 @@ def convert_seconds(seconds):
     secs = seconds % 60
     milliseconds = (seconds - int(seconds)) * 1000
     return hours, minutes, secs, milliseconds
-from sklearn.metrics import f1_score
-
 def plot_f1_scores(X_train, X_test, y_train, y_test):
     f1_scores = []
     C_values = np.linspace(1, 100, 10)
 
     for C in C_values:
-        svm = SVC(C=C)
+        svm = SVC(
+            C=C,
+            gamma=0.1
+        )
         svm.fit(X_train, y_train)
         y_pred = svm.predict(X_test)
         f1 = f1_score(y_test, y_pred, average='macro')
         f1_scores.append(f1)
 
     plt.plot(C_values, f1_scores)
-    plt.xscale('log')
     plt.xlabel('C (Regularization Parameter)')
     plt.ylabel('F1 Score')
     plt.title('F1 Score vs C for SVM')
     plt.show()
-
 def load_data(fast_coeff : int, random_state, test_size : float):
     X_train = pd.read_csv(
         "/Users/welto/Library/CloudStorage/OneDrive-CentraleSupelec/2A/CASA/RakutenPjct/data/X_train_update.csv",
@@ -138,7 +138,6 @@ def tokenise_cleaning_data(X_train, X_test):
     print(f"Preprocessed in {int(preprocessing_time_h)}h {int(preprocessing_time_min)}min {int(preprocessing_time_s)}s {int(preprocessing_time_ms)}ms")
 
     return X_train_clean, X_test_clean
-
 def vectorize_data(X_train_clean, X_test_clean):
     tfidf = TfidfVectorizer()
 
