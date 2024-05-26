@@ -17,10 +17,11 @@ def print_choice():
     print("")
     print("Choisir un modèle à éxécuter : ")
     print("")
-    print("     1 - Neural Network (f1-score 0.808) ")
+    print("     1 - Neural Network (f1-score 0.81) ")
     print("     2 - SVM (f1-score 0.8256) ")
-    print("     3 - KNN (f1-score 0.69)")
-    print("     4 - Solution to the project")
+    print("     3 - KNN (f1-score 0.73)")
+    print("     4 - Bayesian Neural Network")
+    print("     5 - Solution to the project")
     print("")
     submit = int(input("Choix : "))
     return submit
@@ -30,7 +31,8 @@ def print_choice():
 def main():
     filterwarnings("ignore")
     # clean_console()
-       
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    
     X_train,y_data,X_test = Preprocess_dataset()
     tfidf = TfidfVectorizer()
     
@@ -68,7 +70,6 @@ def main():
             best_model = nn_pipeline.named_steps['model']
         else:
             return 0
-        
         y_test_pred_nn = predict_labels(best_model, X_test_tfidf, label_encoder)
         Save_label_output(y_test_pred_nn,len(X_train),'./output/output_nn.csv')
         
@@ -80,7 +81,7 @@ def main():
         DoReload = input("Reload SVM model - mandatory if svm_model.joblib doesn't exist - (yes/no) ? : ")
         
         if DoReload=='no' and path.exists('./models/svm_model.joblib'):
-            print("Loading pre-trained NN model...")
+            print("Loading pre-trained SVM model...")
             best_model = load('./models/svm_model.joblib')
             
         elif DoReload=='yes':    
@@ -91,8 +92,31 @@ def main():
         y_test_pred_svm = best_model.predict(X_test_tfidf)
         Save_label_output(y_test_pred_svm,len(X_train),'./output/output_svm.csv')
 
-
+    if (Model_Map.MODEL_RF.value==int(submit)):
+        from ZRF import train_rf
+        from joblib import dump,load
+        DoReload = input("Reload RF model - mandatory if rf_model.joblib doesn't exist - (yes/no) ? : ")
         
+        if DoReload=='no' and path.exists('./models/rf_model.joblib'):
+            print("Loading pre-trained RF model...")
+            best_model = load('./models/rf_model.joblib')
+            
+        elif DoReload=='yes':    
+            best_model = train_rf(X_train_tfidf,y_data)
+            dump(best_model,'./models/rf_model.joblib')
+        else:
+            return 0
+        y_pred_rf = best_model.predict(X_test_tfidf)
+        Save_label_output(y_pred_rf, len(X_train), './output/output_rf.csv')
+    
+    if (Model_Map.MODEL_S.value==int(submit)):
+        
+        rf_model = train_rf(X_train_tfidf,y_data)
+        y_pred_rf = rf_model.predict(X_test_tfidf)
+        Save_label_output(y_pred_rf, len(X_train), './output/output_rf.csv')
+    print("")
+    print("")   
+    print("outputs enregistrés, fermeture")
     return 0
 
 
@@ -106,5 +130,4 @@ if __name__ == '__main__':
     import tensorflow as tf
     from os import path
     from ZManageData import Preprocess_dataset
-    from sklearn.feature_extraction.text import TfidfVectorizer
     main()

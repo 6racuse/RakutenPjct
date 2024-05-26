@@ -85,7 +85,7 @@ def Preprocess_dataset():
     X_data_design_train = [' '.join(tokens) for tokens in X_data_design_train]
     X_data_design_test = [' '.join(tokens) for tokens in X_data_design_test]
     
-    clean_console()
+    # clean_console()
     return X_data_design_train,y_data,X_data_design_test
  
 
