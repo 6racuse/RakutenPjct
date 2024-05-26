@@ -52,6 +52,31 @@ Certains modèles sont un peu longs à entrainner. Si vous n'avez pas le temps, 
 Il est évident que le code fonctionne très bien sans, il prendra juste plus de temps à donner renvoyer les labels.
 ## Run 
 
+Pour lancer le programme, exécuter le programme **Zmain.py** dans le path dans lequel le repository a été copié :
+```PS
+PS C:\Codes\IA\DS\Rak\RakutenPjct>
+```
+
+Suite à cela, le programme effectue le preprocessing des données, et l'onglet de sélection du modèle s'affiche : 
+
+```PS
+  _______          __               _                           _      _____      _______                   _               _    
+ |_   __ \        [  |  _          / |_                        / \    |_   _|    |_   __ \                 (_)             / |_  
+   | |__) |  ,--.  | | / ] __   _ `| |-'.---.  _ .--.         / _ \     | |        | |__) | .--.  .--.     __ .---.  .---.`| |-' 
+   |  __ /  `'_\ : | '' < [  | | | | | / /__\\[ `.-. |       / ___ \    | |        |  ___[ `/'`\] .'`\ \  [  / /__\\/ /'`\]| |   
+  _| |  \ \_// | |,| |`\ \ | \_/ |,| |,| \__., | | | |     _/ /   \ \_ _| |_      _| |_   | |   | \__. |_  | | \__.,| \__. | |,  
+ |____| |___\'-;__[__|  \_]'.__.'_/\__/ '.__.'[___||__]   |____| |____|_____|    |_____| [___]   '.__.'[ \_| |'.__.''.___.'\__/  
+                                                                                                        \____/
+
+Choisir un modèle à éxécuter : 
+
+     1 - Neural Network (f1-score 0.808) 
+     2 - SVM (f1-score 0.8256) 
+     3 - KNN (f1-score 0.69)
+     4 - Solution to the project
+
+Choix :   
+```
 
 
 ## History
