@@ -9,5 +9,4 @@ class Model_Map(Enum):
     MODEL_NN   =   auto()  #Neural Network
     MODEL_SVM  =   auto()  #SVM model
     MODEL_KNN  =   auto()  #KNN model
-    MODEL_RESULTS = auto() #Solution to the project
     
