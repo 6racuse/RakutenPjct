@@ -80,7 +80,7 @@ def main():
         DoReload = input("Reload SVM model - mandatory if svm_model.joblib doesn't exist - (yes/no) ? : ")
         
         if DoReload=='no' and path.exists('./models/svm_model.joblib'):
-            print("Loading pre-trained NN model...")
+            print("Loading pre-trained SVM model...")
             best_model = load('./models/svm_model.joblib')
             
         elif DoReload=='yes':    
@@ -91,7 +91,23 @@ def main():
         y_test_pred_svm = best_model.predict(X_test_tfidf)
         Save_label_output(y_test_pred_svm,len(X_train),'./output/output_svm.csv')
 
+    if (Model_Map.MODEL_KNN.value == int(submit)):
+        from ZKNN import train_knn
+        from joblib import load, dump
 
+        DoReload = input("Reload kNN model - mandatory if knn_model.joblib doesn't exist - (yes/no) ? : ")
+
+        if DoReload == 'no' and path.exists('./models/knn_model.joblib'):
+            print("Loading pre-trained kNN model...")
+            best_model = load('./models/knn_model.joblib')
+
+        elif DoReload == 'yes':
+            best_model = train_knn(X_train_tfidf, y_data)
+            dump(best_model, './models/knn_model.joblib')
+        else:
+            return 0
+        y_test_pred_knn = best_model.predict(X_test_tfidf)
+        Save_label_output(y_test_pred_knn, len(X_train), './output/output_knn.csv')
         
     return 0
 
