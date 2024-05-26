@@ -22,11 +22,15 @@ def Get_dataset():
     from pandas import read_csv
 
     Xtrain_filename = ".\data\X_train_update.csv"   
-    raw_data = read_csv(Xtrain_filename,index_col=0)
+    raw_data_train = read_csv(Xtrain_filename,index_col=0)
     
     Y_train_filename = ".\data\Y_train_CVw08PX.csv"
     y_data = read_csv(Y_train_filename,index_col=0)
-    return raw_data,y_data
+    
+    Xtest_filename = ".\data\X_test_update.csv"   
+    raw_data_test = read_csv(Xtest_filename,index_col=0)
+    
+    return raw_data_train,y_data,raw_data_test
         
 
 def Save_label_output(y_pred_labels,len_X_train,filename):
@@ -42,70 +46,48 @@ def Save_label_output(y_pred_labels,len_X_train,filename):
             writer.writerow([len_X_train+k,value])
             k+=1
 
-
-
-def Preprocess_dataset(Force_Reload):
+def Preprocess_dataset():   
+    from nltk import download
+    from nltk.tokenize import word_tokenize
+    from nltk.corpus import stopwords
+    from string import punctuation
+    from numpy import ravel 
     
-    from os.path import exists
-    from pandas import read_csv,isna
-    from scipy.io import loadmat
-    from spacy import load
-    from scipy.io import savemat
-    from sys import getsizeof
-    from numpy import where
-            
-    mat_filename = '.\data\X_data.mat'
-    Must_Reload = not exists(mat_filename)
-    spacy_nlp = load("fr_core_news_sm")
-           
-    if Must_Reload or Force_Reload:
-        X_data_design,X_data_descrip = [],[]
-        raw_data,y_data = Get_dataset()
-        design = raw_data['designation']
-        # descrip = raw_data['description']
-        
-        # nan_mask = descrip.isna()
-        # nan_indices = where(nan_mask)[0]
+    download("punkt")
+    download("stopwords")
+    stop_words = set(stopwords.words('french'))
+    
+    raw_data_train,y_data,raw_data_test = Get_dataset()
+  
+    X_data_design_train = []
+    design = raw_data_train['designation']
 
-        # nan_indices_list = nan_indices.tolist()
-        for k in range(len(raw_data)):
-            # if k not in nan_indices_list:
-            #     X_data_descrip.append(raw_to_tokens(descrip[k],spacy_nlp))
-            # else:
-            #     X_data_descrip.append("")
-                
-            X_data_design.append(raw_to_tokens(design[k],spacy_nlp))
-            progress_bar(k + 1,len(raw_data), prefix='Récupération X_train:', suffix='Complété', length=50)
-        mdic = {"data": X_data_design}
-        savemat(mat_filename,mdic)
-    else: 
-        X_data_design = loadmat(mat_filename)['data']
-        Y_train_filename = ".\data\Y_train_CVw08PX.csv"
-        y_data = read_csv(Y_train_filename,index_col=0)
+    for k in range(len(raw_data_train)):
         
-    mat_filename_t = '.\data\X_test.mat'
-    Must_Reload = not exists(mat_filename_t)
+        tokens = word_tokenize(normalize_accent(design[k].lower()),language='french')
+        tokens = [word for word in tokens if word not in punctuation and word not in stop_words]
+        X_data_design_train.append(tokens)
+        
+        progress_bar(k + 1,len(raw_data_train), prefix='Récupération X_train:', suffix='Complété', length=50)
+    
+    X_data_design_test = []
+    design_test = raw_data_test['designation']
+    
+    for k in range(len(raw_data_test)):
+        
+        tokens = word_tokenize(normalize_accent(design_test[k+len(raw_data_train)].lower()),language='french')
+        tokens = [word for word in tokens if word not in punctuation and word not in stop_words]
+        X_data_design_test.append(tokens)
+        
+        progress_bar(k + 1,len(raw_data_test), prefix='Récupération X_test: ', suffix='Complété', length=50)
     
     
-    if Must_Reload or Force_Reload:
-        Xtest_filename = ".\data\X_test_update.csv"   
-        X_data_test = []
-        raw_data_test = read_csv(Xtest_filename,index_col=0)
-        design_test = raw_data_test['designation']
-        #la boucle suivante prend bcp de temps
-        for k in range(len(raw_data_test)):
-            X_data_test.append(raw_to_tokens(design_test[len(X_data_design)+k],spacy_nlp))
-            progress_bar(k + 1,len(raw_data_test), prefix='Récupération X_test:', suffix='Complété', length=50)
-        mdic = {"data": X_data_test}
-        savemat(mat_filename_t,mdic)       
-    else:
-        X_data_test = loadmat(mat_filename_t)['data']
-        
-        
+    X_data_design_train = [' '.join(tokens) for tokens in X_data_design_train]
+    X_data_design_test = [' '.join(tokens) for tokens in X_data_design_test]
+    
     clean_console()
-    return X_data_design,y_data,X_data_test
-    
-
+    return X_data_design_train,y_data,X_data_design_test
+ 
 
 def progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, fill='█'):
     """Fonction d'affichage de progress bar, récupérée sur le Notebook du TD1 de Data Sciences de Myriam Tami
