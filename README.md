@@ -46,14 +46,15 @@ nltk.download('stopwords')
 ## History
 Ici est récaptilé l'avancé du projet pour chacun des membres du groupe
 ### Alexis CHATAIL--RIGOLLEAU
-- **15/05** : lancement du projet, préprocessing de la donnée textuelle "designation", récupération de la matrice TFIDF.
+- **15/05** : lancement du projet, préprocessing de la donnée textuelle "designation", récupération de la matrice TFIDF. travail sur la branch **6racuse's-work** 
 - **16,17/05** : Création du Notebook python pour tester les méthodes, définition de la stratégie en groupe, travail en local. Test de la méthode KNN, best param à K=49, f1_score = 0.68.
 - **19/05** : Création du fichier .py main du projet, stockage de la matrice TFIDF en mémoire pour éviter de le reload à chaque fois. Méthode Random Forest longue en CV, et f1_score = 0.697.
-- **20/05** : Résolution du problème de transfert des modèles (tout seul), en coupant le fichier .joblib en n fichiers binaires. Ajout d'une première méthode de Deep Learning sur une partition du fichier de départ, f1_score = 0.732.
-- **21/05** : Travail en local sur une approche SVM. Début de la modélisation complexe de la solution, alliant plusieures méthodes. Amélioration de la solution Deep Learning. Amélioration de la structure du code de rendu en local. f1_score = 0.7917
+- **20/05** : Résolution du problème de transfert des modèles (tout seul), en coupant le fichier .joblib en n fichiers binaires. Ajout d'une première méthode de Deep Learning sur une partition du fichier de départ, f1_score = 0.732. *version e0r0*
+- **21/05** : Travail en local sur une approche SVM. Début de la modélisation complexe de la solution, alliant plusieures méthodes. Amélioration de la solution Deep Learning. Amélioration de la structure du code de rendu en local. f1_score = 0.7917. *version e1r0*
 - **22/05** : problème de commit trop gros : travail en local.
-- **23/05** : problème réglé, retour au fichier main.py et amélioration de l'interface
-- **24/05** : Amélioration de la récupération des données designation, et récupération des données description pour les utiliser. Mise en forme du réseau de neurone sous forme pipeline.
+- **23/05** : problème réglé, retour au fichier main.py et amélioration de l'interface utilisateur, test d'ajout du pipeline neural network.
+- **24/05** : Amélioration de la récupération des données designation, et récupération des données description pour les utiliser. Mise en forme du réseau de neurone sous forme pipeline. 
+- **25/05** : Multiples gestion de merges entre les branches. Tests de régression non concluants => récupération du commit *e1r0* et épluchage des commits successifs. Fermeture de la branch **6racuse's-work**, push de la *version* release *e1r1* passant (enfin) le test de régression sur le **main**, suppression de l'enregistrement des matrices data, *version e1r2* . Merge de code de la branch **welto** utilisant nltk pour accélérer le préprocessing des strings, *version e1r3*
 
 ### Welto CANDE
 - **15/05** : Démarrage du projet, importation et premier preprocessing des données textuelles (récupération des données d'intérêt). Travail en local.
