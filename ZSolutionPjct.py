@@ -6,8 +6,6 @@ def weighted_vote_prediction(y_pred_nn, y_pred_svm, y_pred_knn):
     f1_svm = 0.8256
     f1_knn = 0.7113
 
-    total = f1_nn + f1_svm + f1_knn
-
     y_pred_final = []
     for nn, svm, knn in zip(y_pred_nn, y_pred_svm, y_pred_knn):
         votes = Counter({
