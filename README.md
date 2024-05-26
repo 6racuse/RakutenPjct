@@ -81,7 +81,7 @@ Choix :
 Il suffit alors de choisir le modèle, suite à quoi une nouvelle ligne apparaît, proposant de load s'il existe le modèle pré-entrainné (voir les [exemples](#Exemples))
 
 ## History
-Ici est récaptilé l'avancé du projet pour chacun des membres du groupe
+Ici est récapitulé l'avancé du projet pour chacun des membres du groupe
 ### Alexis CHATAIL--RIGOLLEAU
 - **15/05** : lancement du projet, préprocessing de la donnée textuelle "designation", récupération de la matrice TFIDF. travail sur la branch **6racuse's-work** 
 - **16,17/05** : Création du Notebook python pour tester les méthodes, définition de la stratégie en groupe, travail en local. Test de la méthode KNN, best param à K=49, f1_score = 0.68.
