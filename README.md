@@ -9,6 +9,7 @@ Nous, Welto et Alexis, proposons ici une solution viable au regard de nos connai
 - [Setup](#Setup)
 - [Run](#Run)
 - [History](#History)
+- [Contacts](#Contacts)
 
 Nous avons séparé le projet en plusieurs parties **distingues** mais pour autant **complémentaires** : 
 - Préprocessing, Feature engineering, Affichage des données et compréhension du jeu de données.
@@ -39,6 +40,13 @@ import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
 ```
+
+### Récupération des modèles
+Certains modèles sont un peu longs à entrainner. Si vous n'avez pas le temps, nous avons créé un lien Wetransfer avec tous les modèles pré-entrainnés (disponible du 27/05/2024 au 03/05/2024, nous [contacter](#Contacts) si besoin pour les réactualiser) :
+
+`lien hypertexte`
+
+Il est évident que le code fonctionne très bien sans, il prendra juste plus de temps à donner les résultats
 ## Run 
 
 
@@ -63,3 +71,5 @@ Ici est récaptilé l'avancé du projet pour chacun des membres du groupe
 - **22/05** : Création d'un fichier .py général. Entraînement du SVM avec des données train_test_split(), score plus acceptable : f1_score = 0.786
 - **23/05** : Variation des hyperparamètres, effet du paramaètre "random_state" de train_test_split (recherche du f1_score max). Pour random_state = 53, f1_score = 0.800. Refonte du code général pour obtenir la prédiction des labels de X_test (.csv du site du challenge). Introduction d'une cross validation. Après calcul des paramètres optimaux, f1_score = 0.8197
 - **24/05** : Implémentation d'un nouvel outil de tokenisation (nltk) bien plus rapide. Travail sur une approche Gradient Boosting. À ce stade, f1_score = 0.8256
+
+## Contacts
