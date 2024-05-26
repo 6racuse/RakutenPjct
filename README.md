@@ -105,7 +105,7 @@ Ici est récaptilé l'avancé du projet pour chacun des membres du groupe
 ## Exemples
 
 ### Use Case 1 : Neural Network model 
-Après avoir lancé le programme, sur la [fenêtre de sélection](#History)
+Après avoir lancé le programme, sur la [fenêtre de sélection](#Run)
 
 
 ## Contacts
