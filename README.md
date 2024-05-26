@@ -9,6 +9,7 @@ Nous, Welto et Alexis, proposons ici une solution viable au regard de nos connai
 - [Setup](#Setup)
 - [Run](#Run)
 - [History](#History)
+- [Exemples](#Exemples)
 - [Contacts](#Contacts)
 
 Nous avons séparé le projet en plusieurs parties **distingues** mais pour autant **complémentaires** : 
@@ -77,7 +78,7 @@ Choisir un modèle à éxécuter :
 
 Choix :   
 ```
-
+Il suffit alors de choisir le modèle, suite à quoi une nouvelle ligne apparaît, proposant de load s'il existe le modèle pré-entrainné (voir les [exemples](#Exemples))
 
 ## History
 Ici est récaptilé l'avancé du projet pour chacun des membres du groupe
@@ -99,5 +100,5 @@ Ici est récaptilé l'avancé du projet pour chacun des membres du groupe
 - **22/05** : Création d'un fichier .py général. Entraînement du SVM avec des données train_test_split(), score plus acceptable : f1_score = 0.786
 - **23/05** : Variation des hyperparamètres, effet du paramaètre "random_state" de train_test_split (recherche du f1_score max). Pour random_state = 53, f1_score = 0.800. Refonte du code général pour obtenir la prédiction des labels de X_test (.csv du site du challenge). Introduction d'une cross validation. Après calcul des paramètres optimaux, f1_score = 0.8197
 - **24/05** : Implémentation d'un nouvel outil de tokenisation (nltk) bien plus rapide. Travail sur une approche Gradient Boosting. À ce stade, f1_score = 0.8256
-
+## Exemples
 ## Contacts
