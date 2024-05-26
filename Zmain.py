@@ -198,7 +198,7 @@ def main():
 
         #détermination des meilleurs labels
         Save_label_output(
-            weighted_vote_prediction(y_test_pred_nn, y_test_pred_svm, y_test_pred_knn),
+            weighted_vote_prediction(y_test_pred_nn, y_test_pred_svm, y_test_pred_knn,y_pred_rf),
             len(X_train),
             './output/output_weighted_vote.csv'
         )
