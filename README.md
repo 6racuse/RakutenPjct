@@ -110,7 +110,7 @@ Après avoir lancé le programme, sur l' [onglet de sélection](#Run), rentrer :
 Choix : 1
 ```
 Puis la fenêtre suivante apparaît :
-```PS
+```
 Reload neural network model - mandatory if best_model.keras doesn't exist - (yes/no) ? : 
 ```
 - **yes** recrée l'entrainnement du réseau de neurones.
