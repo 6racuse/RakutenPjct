@@ -59,7 +59,7 @@ PS C:\Codes\IA\DS\Rak\RakutenPjct>
 
 Suite à cela, le programme effectue le preprocessing des données, et l'onglet de sélection du modèle s'affiche : 
 
-```PS
+```
  _______          __               _                           _      _____      _______                   _               _    
  |_   __ \        [  |  _          / |_                        / \    |_   _|    |_   __ \                 (_)             / |_  
    | |__) |  ,--.  | | / ] __   _ `| |-'.---.  _ .--.         / _ \     | |        | |__) | .--.  .--.     __ .---.  .---.`| |-' 
