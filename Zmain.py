@@ -15,7 +15,7 @@ def print_choice():
     print("     1 - Neural Network (f1-score 0.808) ")
     print("     2 - SVM (f1-score 0.8256) ")
     print("     3 - KNN (f1-score 0.7113)")
-    print("     4 - Solution to the project (f1-score 0.8118")
+    print("     4 - Solution to the project (f1-score 0.8118)")
     print("")
     submit = int(input("Choix : "))
     return submit
