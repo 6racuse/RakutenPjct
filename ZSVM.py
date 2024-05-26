@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 import spacy
@@ -18,10 +17,6 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 
-
-
-
-    
 def train_model(X_train_tfidf, Y_train):
     param_grid = {
         'C': 8.071428571428571,
@@ -38,10 +33,6 @@ def train_model(X_train_tfidf, Y_train):
         Y_train
     )
     return svm
-
-
-
-
 def load_data(fast_coeff : int):
     X_train = pd.read_csv(
         "/Users/welto/Library/CloudStorage/OneDrive-CentraleSupelec/2A/CASA/RakutenPjct/data/X_train_update.csv",
@@ -73,10 +64,6 @@ def load_data(fast_coeff : int):
     Y_train = Y_train['prdtypecode'][:Y_train.shape[0]//fast_coeff].tolist()
 
     return X_train, X_test_challenge, Y_train
-
-
-
-
 def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
     if os.path.exists(train_filename) and os.path.exists(test_filename):
         return load_tokenized_data(train_filename, test_filename)
@@ -149,9 +136,6 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
     save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename)
 
     return X_train_clean, X_test_clean
-
-
-
 def vectorize_data(X_train_clean, X_test_challenge_clean):
     tfidf = TfidfVectorizer()
 
@@ -190,11 +174,6 @@ def load_tokenized_data(train_filename, test_challenge_filename):
     ) as f:
         X_test_challenge_clean = pickle.load(f)
     return X_train_clean, X_test_challenge_clean
-
-
-
-
-
 def main(fast_coeff : int):
     exec_time_start = time.time()
     warnings.filterwarnings("ignore")
@@ -231,5 +210,3 @@ def main(fast_coeff : int):
 
 if __name__ == "__main__":
     main(fast_coeff=1)
-
-
