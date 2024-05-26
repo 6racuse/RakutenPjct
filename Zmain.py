@@ -53,7 +53,7 @@ def main():
         label_encoder = LabelEncoder()
         y_train_encoded = label_encoder.fit_transform(y_data)
         
-        DoReload = input("Reload neural network model - mandatory if best_model.keras doesn't exist - (yes/no) ? : ")
+        DoReload = input("Reload neural network model - mandatory if nn_model.keras doesn't exist - (yes/no) ? : ")
         
         if DoReload=='no' and path.exists('./models/nn_model.keras'):
             print("Loading pre-trained NN model...")
