@@ -110,16 +110,27 @@ def main():
         Save_label_output(y_test_pred_knn, len(X_train), './output/output_knn.csv')
 
     if (Model_Map.MODEL_RESULTS.value == int(submit)):
-        from ZSoltutionProject import train__, train_knn, train_model
         from joblib import load, dump
+        from ZNN import train__, f1_m, predict_labels
+        from sklearn.pipeline import Pipeline
+        from sklearn.preprocessing import LabelEncoder
+        from ZSVM import train_model
+        from joblib import load, dump
+        from ZKNN import train_knn
+        from joblib import load, dump
+        from ZSolutionPjct import weighted_vote_prediction
 
         #NN
+        label_encoder = LabelEncoder()
+        y_train_encoded = label_encoder.fit_transform(y_data)
+
         DoReload_nn = input("Reload neural network model - mandatory if nn_model.keras doesn't exist - (yes/no) ? : ")
-        if DoReload == 'no' and path.exists('./models/nn_model.keras'):
+
+        if DoReload_nn == 'no' and path.exists('./models/nn_model.keras'):
             print("Loading pre-trained NN model...")
             best_model = tf.keras.models.load_model('./models/nn_model.keras', custom_objects={'f1_m': f1_m})
 
-        elif DoReload == 'yes':
+        elif DoReload_nn == 'yes':
             nn_pipeline = Pipeline([
                 ('tfidf', TfidfVectorizer()),
                 ('model', train__(X_train_tfidf, y_train_encoded))
@@ -159,6 +170,8 @@ def main():
             return 0
         y_test_pred_knn = best_model.predict(X_test_tfidf)
         Save_label_output(y_test_pred_knn, len(X_train), './output/output_knn.csv')
+
+
 
 
         

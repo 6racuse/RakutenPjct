@@ -12,24 +12,35 @@ from nltk.tokenize import word_tokenize
 import time
 from nltk.corpus import stopwords
 import string
+from sklearn.svm import SVC
+import numpy as np
+
+
+def convert_seconds(seconds):
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    secs = seconds % 60
+    milliseconds = (seconds - int(seconds)) * 1000
+    return hours, minutes, secs, milliseconds
+from sklearn.metrics import f1_score
 
 def plot_f1_scores(X_train, X_test, y_train, y_test):
     f1_scores = []
-    neighbors = list(range(1, 50))
+    C_values = np.linspace(1, 100, 10)
 
-    for n in neighbors:
-        knn = KNeighborsClassifier(n_neighbors=n)
-        knn.fit(X_train, y_train)
-        y_pred = knn.predict(X_test)
-        f1 = f1_score(y_test, y_pred, average='weighted')
+    for C in C_values:
+        svm = SVC(C=C)
+        svm.fit(X_train, y_train)
+        y_pred = svm.predict(X_test)
+        f1 = f1_score(y_test, y_pred, average='macro')
         f1_scores.append(f1)
 
-    plt.plot(neighbors, f1_scores)
-    plt.xlabel('Number of Neighbors')
+    plt.plot(C_values, f1_scores)
+    plt.xscale('log')
+    plt.xlabel('C (Regularization Parameter)')
     plt.ylabel('F1 Score')
-    plt.title('F1 Score vs Number of Neighbors')
+    plt.title('F1 Score vs C for SVM')
     plt.show()
-
 
 def load_data(fast_coeff : int, random_state, test_size : float):
     X_train = pd.read_csv(
@@ -144,4 +155,4 @@ X_train, X_test, y_data, y_test = load_data(
 
 X_train, X_test = tokenise_cleaning_data(X_train, X_test)
 X_train_tfidf, X_test_tfidf = vectorize_data(X_train, X_test)
-plot_f1_scores(X_train, X_test, y_data, y_test)
+plot_f1_scores(X_train_tfidf, X_test_tfidf, y_data, y_test)
