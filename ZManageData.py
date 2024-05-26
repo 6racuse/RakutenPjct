@@ -6,11 +6,13 @@ def clean_console():
         os.system('clear')
         
         
-
-
-
-
-
+def download_nltk_data():
+    from nltk import download
+    from nltk.data import find
+    if not find('tokenizers/punkt'):
+        download("punkt")
+    if not find('corpora/stopwords'):
+        download("stopwords")
 
 
 def Get_dataset():
@@ -21,15 +23,15 @@ def Get_dataset():
     """
     from pandas import read_csv
 
-    Xtrain_filename = ".\data\X_train_update.csv"   
+    Xtrain_filename = "./data/X_train_update.csv"
     raw_data_train = read_csv(Xtrain_filename,index_col=0)
-    
-    Y_train_filename = ".\data\Y_train_CVw08PX.csv"
+
+    Y_train_filename = "./data/Y_train_CVw08PX.csv"
     y_data = read_csv(Y_train_filename,index_col=0)
-    
-    Xtest_filename = ".\data\X_test_update.csv"   
+
+    Xtest_filename = "./data/X_test_update.csv"
     raw_data_test = read_csv(Xtest_filename,index_col=0)
-    
+
     return raw_data_train,y_data,raw_data_test
         
 
@@ -53,8 +55,7 @@ def Preprocess_dataset():
     from string import punctuation
     from numpy import ravel 
     
-    download("punkt")
-    download("stopwords")
+    download_nltk_data()
     stop_words = set(stopwords.words('french'))
     
     raw_data_train,y_data,raw_data_test = Get_dataset()
