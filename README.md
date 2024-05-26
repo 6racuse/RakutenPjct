@@ -120,3 +120,5 @@ Une fois le choix fait, le programme effectue la prédiction des labels, et les 
 
 
 ## Contacts
+- Alexis : alexis.chatail-rigolleau@student-cs.fr
+- Welto  : welto-cande@student-cs.fr
