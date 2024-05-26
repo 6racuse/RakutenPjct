@@ -42,11 +42,14 @@ nltk.download('stopwords')
 ```
 
 ### Récupération des modèles
+
+**Le repository ne comprend pas les modèles pré-entrainnés** 
+
 Certains modèles sont un peu longs à entrainner. Si vous n'avez pas le temps, nous avons créé un lien Wetransfer avec tous les modèles pré-entrainnés (disponible du 27/05/2024 au 03/05/2024, nous [contacter](#Contacts) si besoin pour les réactualiser) :
 
 `lien hypertexte`
 
-Il est évident que le code fonctionne très bien sans, il prendra juste plus de temps à donner les résultats
+Il est évident que le code fonctionne très bien sans, il prendra juste plus de temps à donner renvoyer les labels.
 ## Run 
 
 
