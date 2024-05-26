@@ -103,7 +103,7 @@ Ici est récapitulé l'avancé du projet pour chacun des membres du groupe
 - **23/05** : Variation des hyperparamètres, effet du paramaètre "random_state" de train_test_split (recherche du f1_score max). Pour random_state = 53, f1_score = 0.800. Refonte du code général pour obtenir la prédiction des labels de X_test (.csv du site du challenge). Introduction d'une cross validation. Après calcul des paramètres optimaux, f1_score = 0.8197
 - **24/05** : Implémentation d'un nouvel outil de tokenisation (nltk) bien plus rapide. Travail sur une approche Gradient Boosting. À ce stade, f1_score = 0.8256
 - **25/05** : Ajout d'un pipeline de preprocessing pour la fluidification des process et la simplification du code : Tokenisation avec nltk, vectorisation et entraînement du modèle SVM. Test de la solution XGB (eXtreme Gradient Boosting), trop gourmand en ressources et temps de calcul.
-- **26/05** : Travail sur le code final, merge du code kNN sur le code Zmain.py. Travail sur le rapport final : construction de courbes d'erreur et de score pour le modèle SVM.
+- **26/05** : Travail sur le code final, merge du code kNN sur le code Zmain.py. Travail sur le rapport final : construction de courbes d'erreur et de score pour le modèle SVM. Introduction d'une méthode de prédiction par vote pondéré : la nouvelle prédiction est obtenue comme la prédiction ayant le poids le plus grand parmi les prédictions des différents modèles (le poids est le plus grand f1 score obtenu par chaque modèle).
 
   
 ## Exemples
