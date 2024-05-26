@@ -108,6 +108,59 @@ def main():
             return 0
         y_test_pred_knn = best_model.predict(X_test_tfidf)
         Save_label_output(y_test_pred_knn, len(X_train), './output/output_knn.csv')
+
+    if (Model_Map.MODEL_RESULTS.value == int(submit)):
+        from ZSoltutionProject import train__, train_knn, train_model
+        from joblib import load, dump
+
+        #NN
+        DoReload_nn = input("Reload neural network model - mandatory if nn_model.keras doesn't exist - (yes/no) ? : ")
+        if DoReload == 'no' and path.exists('./models/nn_model.keras'):
+            print("Loading pre-trained NN model...")
+            best_model = tf.keras.models.load_model('./models/nn_model.keras', custom_objects={'f1_m': f1_m})
+
+        elif DoReload == 'yes':
+            nn_pipeline = Pipeline([
+                ('tfidf', TfidfVectorizer()),
+                ('model', train__(X_train_tfidf, y_train_encoded))
+            ])
+
+            best_model = nn_pipeline.named_steps['model']
+        else:
+            return 0
+
+        y_test_pred_nn = predict_labels(best_model, X_test_tfidf, label_encoder)
+        Save_label_output(y_test_pred_nn, len(X_train), './output/output_nn.csv')
+
+        #SVM
+        DoReload_svm = input("Reload SVM model - mandatory if svm_model.joblib doesn't exist - (yes/no) ? : ")
+        if DoReload_svm == 'no' and path.exists('./models/svm_model.joblib'):
+            print("Loading pre-trained SVM model...")
+            best_model = load('./models/svm_model.joblib')
+
+        elif DoReload_svm == 'yes':
+            best_model = train_model(X_train_tfidf, y_data)
+            dump(best_model, './models/svm_model.joblib')
+        else:
+            return 0
+        y_test_pred_svm = best_model.predict(X_test_tfidf)
+        Save_label_output(y_test_pred_svm, len(X_train), './output/output_svm.csv')
+
+        #kNN
+        DoReload_kNN = input("Reload kNN model - mandatory if knn_model.joblib doesn't exist - (yes/no) ? : ")
+        if DoReload_kNN == 'no' and path.exists('./models/knn_model.joblib'):
+            print("Loading pre-trained kNN model...")
+            best_model = load('./models/knn_model.joblib')
+
+        elif DoReload_kNN == 'yes':
+            best_model = train_knn(X_train_tfidf, y_data)
+            dump(best_model, './models/knn_model.joblib')
+        else:
+            return 0
+        y_test_pred_knn = best_model.predict(X_test_tfidf)
+        Save_label_output(y_test_pred_knn, len(X_train), './output/output_knn.csv')
+
+
         
     return 0
 
