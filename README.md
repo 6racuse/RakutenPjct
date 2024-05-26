@@ -111,7 +111,7 @@ Choix : 1
 ```
 Puis la fenêtre suivante apparaît :
 ```
-Reload neural network model - mandatory if best_model.keras doesn't exist - (yes/no) ? : 
+Reload neural network model - mandatory if nn_model.keras doesn't exist - (yes/no) ? : 
 ```
 - **yes** recrée l'entrainnement du réseau de neurones.
 - **no**  charge le model entrainné s'il est présent en mémoire, sinon il relance l'entrainnement du réseau de neurones
