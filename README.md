@@ -51,7 +51,7 @@ Vérifier que les répertoires `./models`, `./data` et `./output` sont bien pré
 
 Certains modèles sont un peu longs à entrainner (notamment le KNN). Si vous n'avez pas le temps, nous avons créé un lien Wetransfer avec tous les modèles pré-entrainnés (disponible du 27/05/2024 au 03/05/2024, nous [contacter](#Contacts) si besoin pour les réactualiser) :
 
-`[lien hypertexte](https://we.tl/t-azlrUXntbz)`
+[lien hypertexte](https://we.tl/t-azlrUXntbz)
 
 Il est évident que le code fonctionne très bien sans, il prendra juste (beaucoup) plus de temps à renvoyer les labels, car il ré-entrainera les modèles.
 ## Run 
