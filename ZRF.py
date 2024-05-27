@@ -46,7 +46,7 @@ def Global_get_best_params(X_train,Y_train):
         'min_samples_leaf': [1, 2, 4]
     }
 
-    grid_search = GridSearchCV(estimator=classifier, param_grid=param_grid, cv=3, scoring='accuracy', n_jobs=-1)
+    grid_search = GridSearchCV(estimator=classifier, param_grid=param_grid, cv=3, scoring='f1_score', n_jobs=-1)
     grid_search.fit(X_train_transposed, Y_train)
     return grid_search.best_params
 
