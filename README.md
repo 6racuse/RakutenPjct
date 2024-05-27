@@ -75,8 +75,9 @@ Choisir un modèle à éxécuter :
 
      1 - Neural Network (f1-score 0.808) 
      2 - SVM (f1-score 0.8256) 
-     3 - KNN (f1-score 0.69)
-     4 - Solution to the project
+     3 - KNN (f1-score 0.7113)
+     4 - RF  (f1-score 0,7920)
+     5 - Solution to the project (f1-score 0.808)
 
 Choix :   
 ```
@@ -122,6 +123,20 @@ Reload neural network model - mandatory if nn_model.keras doesn't exist - (yes/n
 
 Une fois le choix fait, le programme effectue la prédiction des labels, et les stocke dans le fichier **output_nn.csv** du répertoire **output**. Le modèle entrainné peut être récupéré sous le nom de **nn_model.keras** dans le répertoire **models**
 
+
+### Use Case 2 : 
+Après avoir lancé le programme, sur l' [onglet de sélection](#Run), rentrer :
+```PS
+Choix : 1
+```
+Puis la fenêtre suivante apparaît :
+```
+Reload neural network model - mandatory if nn_model.keras doesn't exist - (yes/no) ? : 
+```
+- **yes** recrée l'entrainnement du réseau de neurones.
+- **no**  charge le model entrainné s'il est présent en mémoire, sinon il relance l'entrainnement du réseau de neurones
+
+Une fois le choix fait, le programme effectue la prédiction des labels, et les stocke dans le fichier **output_nn.csv** du répertoire **output**. Le modèle entrainné peut être récupéré sous le nom de **nn_model.keras** dans le répertoire **models**
 
 ## Contacts
 - Alexis : alexis.chatail-rigolleau@student-cs.fr
