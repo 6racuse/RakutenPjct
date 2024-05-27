@@ -43,7 +43,7 @@ nltk.download('stopwords')
 ```
 ## Vérifier les répertoires
 
-Vérifier que les répertoires `./models`, `./data` et `./output` sont bien présents.
+Vérifier que les répertoires `./models`, `./data` et `./output` sont bien présents. Notamment `./models`, sinon ,le créer
 
 ### Récupération des modèles
 
