@@ -52,7 +52,7 @@ Certains modèles sont un peu longs à entrainner. Si vous n'avez pas le temps, 
 
 `lien hypertexte`
 
-Il est évident que le code fonctionne très bien sans, il prendra juste plus de temps à donner renvoyer les labels.
+Il est évident que le code fonctionne très bien sans, il prendra juste (beaucoup) plus de temps à renvoyer les labels, car il ré-entrainera les modèles.
 ## Run 
 
 Pour lancer le programme, exécuter le programme **Zmain.py** dans le path dans lequel le repository a été copié :
