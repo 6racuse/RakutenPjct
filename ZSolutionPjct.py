@@ -1,17 +1,17 @@
 from collections import Counter
 
-def weighted_vote_prediction(y_pred_nn, y_pred_svm, y_pred_knn):
+def weighted_vote_prediction(y_pred_nn, y_pred_svm, y_pred_rf):
 
     f1_nn = 0.808
     f1_svm = 0.8256
-    f1_knn = 0.7113
-
+    f1_rf = 0.7920
+    
     y_pred_final = []
-    for nn, svm, knn in zip(y_pred_nn, y_pred_svm, y_pred_knn):
+    for nn, svm, rf in zip(y_pred_nn, y_pred_svm,y_pred_rf):
         votes = Counter({
             nn: f1_nn,
             svm: f1_svm,
-            knn: f1_knn
+            rf: f1_rf
         })
 
         y_pred_final.append(
