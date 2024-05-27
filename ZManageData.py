@@ -1,4 +1,13 @@
 def clean_console():
+    """
+        Clears the console output based on the operating system.
+
+        Args:
+            None
+
+        Returns:
+            None
+    """
     import os
     if os.name == 'nt':  # Pour Windows
         os.system('cls')
@@ -7,6 +16,15 @@ def clean_console():
         
         
 def download_nltk_data():
+    """
+        Downloads necessary NLTK data files if they are not already present.
+
+        Args:
+            None
+
+        Returns:
+            None
+    """
     from nltk import download
     from nltk.data import find
     if not find('tokenizers/punkt'):
@@ -16,10 +34,11 @@ def download_nltk_data():
 
 
 def Get_dataset():
-    """récupère le jeu de données train
+    """
+        Retrieves the training and test datasets.
 
-    Returns:
-        x_data,y_data
+        Returns:
+            tuple: A tuple containing raw training data, training labels, and raw test data.
     """
     from pandas import read_csv
 
@@ -36,6 +55,17 @@ def Get_dataset():
         
 
 def Save_label_output(y_pred_labels,len_X_train,filename):
+    """
+        Saves the predicted labels to a CSV file.
+
+        Args:
+            y_pred_labels (list): The predicted labels.
+            len_X_train (int): The length of the training data.
+            filename (str): The name of the file to save the labels.
+
+        Returns:
+            None
+    """
     from csv import writer
 
     
@@ -48,7 +78,16 @@ def Save_label_output(y_pred_labels,len_X_train,filename):
             writer.writerow([len_X_train+k,value])
             k+=1
 
-def Preprocess_dataset():   
+def Preprocess_dataset():
+    """
+        Preprocesses the dataset by tokenizing and removing stopwords.
+
+        Args:
+            None
+
+        Returns:
+            tuple: A tuple containing preprocessed training data, training labels, and preprocessed test data.
+    """
     from nltk import download
     from nltk.tokenize import word_tokenize
     from nltk.corpus import stopwords
@@ -102,6 +141,16 @@ def progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=50, 
         print()
                 
 def raw_to_tokens(raw_string, spacy_nlp):
+    """
+        Processes a raw string into tokens using spaCy.
+
+        Args:
+            raw_string (str): The raw input string.
+            spacy_nlp (spacy.lang): The spaCy NLP object.
+
+        Returns:
+            str: The processed string with tokens.
+    """
         # Write code for lower-casing
     string = raw_string.lower()
 
@@ -121,6 +170,15 @@ def raw_to_tokens(raw_string, spacy_nlp):
 
 
 def normalize_accent(string):
+    """
+        Normalizes accents in a string by replacing accented characters with their unaccented counterparts.
+
+        Args:
+            string (str): The input string to normalize.
+
+        Returns:
+            str: The normalized string.
+    """
     string = string.replace('á', 'a')
     string = string.replace('â', 'a')
     string = string.replace('à', 'a')

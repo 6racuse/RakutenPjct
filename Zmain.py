@@ -1,4 +1,13 @@
 def print_title():
+    """
+        Prints the title of the application in ASCII art.
+
+        Args:
+            None
+
+        Returns:
+            int: Returns 0 upon completion.
+    """
     print("  _______          __               _                           _      _____      _______                   _               _    ")
     print(" |_   __ \        [  |  _          / |_                        / \    |_   _|    |_   __ \                 (_)             / |_  ")
     print("   | |__) |  ,--.  | | / ] __   _ `| |-'.---.  _ .--.         / _ \     | |        | |__) | .--.  .--.     __ .---.  .---.`| |-' ")
@@ -8,6 +17,15 @@ def print_title():
     print("                                                                                                        \____/                   ")
     return 0
 def print_choice():
+    """
+        Displays a menu for the user to choose a model to execute.
+
+        Args:
+            None
+
+        Returns:
+            int: The user's choice as an integer.
+    """
     
     print("")
     print("Choisir un modèle à éxécuter : ")
@@ -21,6 +39,15 @@ def print_choice():
     submit = int(input("Choix : "))
     return submit
 def main():
+    """
+        Main function that handles the preprocessing, model training, and prediction.
+
+        Args:
+            None
+
+        Returns:
+            int: Returns 0 upon successful completion.
+    """
     filterwarnings("ignore")
     # clean_console()
        

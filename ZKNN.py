@@ -4,6 +4,16 @@ from sklearn.model_selection import GridSearchCV
 
 
 def train_knn(X_train, y_train):
+    """
+        Train a K-Nearest Neighbors (KNN) classifier on the provided training data.
+
+        Args:
+            X_train (sparse matrix): The feature matrix for training.
+            y_train (array-like): The target labels for training.
+
+        Returns:
+            KNeighborsClassifier: The trained KNN classifier with the best found parameters.
+    """
     params = {'n_neighbors': range(2, 20)}
     n_folds = 10
     cv = KFold(n_splits=n_folds, shuffle=False)

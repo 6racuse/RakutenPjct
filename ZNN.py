@@ -8,6 +8,17 @@ from tensorflow.keras.utils import to_categorical
 
 
 def predict_labels(NN_model, X_test_tfidf,label_encoder):
+    """
+        Predicts labels for the given test data using a trained neural network model.
+
+        Args:
+            NN_model (keras.Model): The trained neural network model.
+            X_test_tfidf (numpy.ndarray): The TF-IDF transformed test data.
+            label_encoder (sklearn.preprocessing.LabelEncoder): The label encoder used to inverse transform the predicted labels.
+
+        Returns:
+            numpy.ndarray: The predicted labels for the test data.
+    """
     y_test_pred_proba = NN_model.predict(X_test_tfidf)
     y_test_pred = np.argmax(y_test_pred_proba, axis=1)
 
@@ -18,6 +29,16 @@ def predict_labels(NN_model, X_test_tfidf,label_encoder):
 
 
 def f1_m(y_true, y_pred):
+    """
+        Computes the F1 score for the given true and predicted labels.
+
+        Args:
+            y_true (tf.Tensor): The true labels, typically one-hot encoded.
+            y_pred (tf.Tensor): The predicted labels, typically one-hot encoded.
+
+        Returns:
+            tf.Tensor: The mean F1 score.
+    """
     y_true = tf.cast(tf.argmax(y_true, axis=1), tf.float32)
     y_pred = tf.cast(tf.argmax(y_pred, axis=1), tf.float32)
 
@@ -33,6 +54,16 @@ def f1_m(y_true, y_pred):
     return tf.reduce_mean(f1)
 
 def train__(X_train_tfidf, y_train_encoded):
+    """
+        Trains a neural network model on the given TF-IDF transformed training data and encoded labels.
+
+        Args:
+            X_train_tfidf (numpy.ndarray): The TF-IDF transformed training data.
+            y_train_encoded (numpy.ndarray): The encoded training labels.
+
+        Returns:
+            keras.Model: The best trained neural network model based on validation F1 score.
+    """
 
     num_classes = len(np.unique(y_train_encoded))
     y_train_categorical = to_categorical(y_train_encoded, num_classes=num_classes)

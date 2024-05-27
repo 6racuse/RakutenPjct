@@ -9,6 +9,7 @@ import pickle
 import os
 import nltk
 
+from ZManageData import normalize_accent
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from joblib import dump, load
@@ -18,22 +19,55 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 
 def train_model(X_train_tfidf, Y_train):
+    """
+        This function trains a Support Vector Machine (SVM) model with the given parameters.
+
+        Args:
+            X_train_tfidf (sparse matrix, [n_samples, n_features]): The input data for training. Each row represents a document, and each column represents a feature.
+            Y_train (array-like): The target values (class labels) for the training data.
+
+        Returns:
+            svm (SVC): The trained SVM model.
+        """
     param_grid = {
-        'C': 8.071428571428571,
-        'gamma': 0.1,
+        'C': [int(k) for k in np.linspace(1, 100, 100)],
+        'gamma': [0.01, 0.1, 1],
         'kernel': 'rbf'
     }
-    svm = SVC(
-        C=param_grid['C'],
-        gamma=param_grid['gamma'],
-        kernel=param_grid['kernel']
+    # Cross Validation
+    grid_search = GridSearchCV(
+        estimator=SVC(),
+        param_grid=param_grid,
+        cv=5,
+        n_jobs=-1,
+        verbose=10
     )
+    #grid_search.fit(X_train_tfidf, Y_train)
+    
+    svm = SVC(
+        C=8.071428571428571,
+        gamma=0.1,
+        kernel='rbf'
+    )
+    
+    #Training model
     svm.fit(
         X_train_tfidf,
         Y_train
     )
     return svm
 def load_data(fast_coeff : int):
+    """
+        This function loads the training and testing data from CSV files, and returns the 'designation' column from the training and testing data, and the 'prdtypecode' column from the training data.
+
+        Args:
+            fast_coeff (int): A coefficient for reducing the size of the data. The data is divided by this coefficient.
+
+        Returns:
+            X_train (list): The 'designation' column from the training data.
+            X_test_challenge (list): The 'designation' column from the testing data.
+    """
+    # Reading CSV files
     X_train = pd.read_csv(
         "/Users/welto/Library/CloudStorage/OneDrive-CentraleSupelec/2A/CASA/RakutenPjct/data/X_train_update.csv",
         sep=',',
@@ -57,16 +91,26 @@ def load_data(fast_coeff : int):
         sep=',',
         usecols=lambda column: column != 'Unnamed: 0'
     )
-
+    
+    # Converting columns to lists
     X_train = X_train['designation'][:X_train.shape[0]//fast_coeff].tolist()
     X_test_challenge = X_test_challenge['designation'][:X_test_challenge.shape[0]//fast_coeff].tolist()
 
     Y_train = Y_train['prdtypecode'][:Y_train.shape[0]//fast_coeff].tolist()
 
     return X_train, X_test_challenge, Y_train
-def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
-    if os.path.exists(train_filename) and os.path.exists(test_filename):
-        return load_tokenized_data(train_filename, test_filename)
+def tokenise_cleaning_data(X_train, X_test):
+    """
+        This function tokenizes and cleans the input data. It removes punctuation and French stopwords.
+
+        Args:
+            X_train (list): The training data to be tokenized and cleaned. It should be a list of strings.
+            X_test (list): The testing data to be tokenized and cleaned. It should be a list of strings.
+
+        Returns:
+            X_train_clean (list): The tokenized and cleaned training data. Each string is a space-separated string of tokens.
+            X_test_clean (list): The tokenized and cleaned testing data. Each string is a space-separated string of tokens.
+    """
 
     nltk.download("punkt")
     nltk.download("stopwords")
@@ -78,135 +122,48 @@ def tokenise_cleaning_data(X_train, X_test, train_filename, test_filename):
 
     a = len(X_train)
     b = len(X_test)
-
-    header.progress_bar(
-        0,
-        a,
-        prefix='Progress:',
-        suffix='Complete',
-        length=50
-    )
-
-    preprocessing_start_time = time.time()
-
+    
+    # Tokenisation, lowering and removal of accents
     for k in range(a):
         tokens = word_tokenize(
-            header.normalize_accent(
+            normalize_accent(
                 X_train[k].lower()
             ),
             language='french'
         )
         tokens = [word for word in tokens if word not in string.punctuation and word not in stop_words]
         X_train_clean.append(tokens)
-        header.progress_bar(
-            k + 1,
-            a,
-            prefix='X_train_raw_designation_clean :',
-            suffix='Complete',
-            length=50
-        )
 
     for k in range(b):
         tokens = word_tokenize(
-            header.normalize_accent(
+            normalize_accent(
                 X_test[k].lower()
             ),
             language='french'
         )
         tokens = [word for word in tokens if word not in string.punctuation and word not in stop_words]
         X_test_clean.append(tokens)
-        header.progress_bar(
-            k + 1,
-            b,
-            prefix='X_test_raw_designation_clean :',
-            suffix='Complete',
-            length=50
-        )
 
+    # Joining the tokens
     X_train_clean = [' '.join(tokens) for tokens in X_train_clean]
     X_test_clean = [' '.join(tokens) for tokens in X_test_clean]
 
-    preprocessing_end_time = time.time()
-    preprocessing_time_h, preprocessing_time_min, preprocessing_time_s = header.convert_seconds(
-        preprocessing_end_time - preprocessing_start_time
-    )
-
-    print(f"Preprocessed in {int(preprocessing_time_h)}h {int(preprocessing_time_min)}min {int(preprocessing_time_s)}s")
-
-    save_tokenized_data(X_train_clean, X_test_clean, train_filename, test_filename)
-
     return X_train_clean, X_test_clean
 def vectorize_data(X_train_clean, X_test_challenge_clean):
+    """
+        This function vectorizes the input data using TF-IDF Vectorizer.
+
+        Args:
+            X_train_clean (list): The cleaned training data to be vectorized. Each string is a space-separated string of tokens.
+            X_test_challenge_clean (list): The cleaned testing data to be vectorized. Each string is a space-separated string of tokens.
+
+        Returns:
+            X_train_tfidf (sparse matrix, [n_samples, n_features]): Transformed training data. Each row represents a document, and each column represents a feature.
+            X_test_tfidf (sparse matrix, [n_samples, n_features]): Transformed testing data. Each row represents a document, and each column represents a feature.
+    """
     tfidf = TfidfVectorizer()
 
     X_train_tfidf = tfidf.fit_transform(X_train_clean)
     X_test_tfidf = tfidf.transform(X_test_challenge_clean)
 
     return X_train_tfidf, X_test_tfidf
-def save_tokenized_data(X_train_clean, X_test_challenge_clean, train_filename, test_challenge_filename):
-    with open(
-            train_filename,
-            'wb'
-    ) as f:
-        pickle.dump(
-            X_train_clean,
-            f
-        )
-
-    with open(
-            test_challenge_filename,
-            'wb'
-    ) as f:
-        pickle.dump(
-            X_test_challenge_clean,
-            f
-        )
-def load_tokenized_data(train_filename, test_challenge_filename):
-    with open(
-            train_filename,
-            'rb'
-    ) as f:
-        X_train_clean = pickle.load(f)
-
-    with open(
-            test_challenge_filename,
-            'rb'
-    ) as f:
-        X_test_challenge_clean = pickle.load(f)
-    return X_train_clean, X_test_challenge_clean
-def main(fast_coeff : int):
-    exec_time_start = time.time()
-    warnings.filterwarnings("ignore")
-
-    train_filename = 'X_train_clean.pkl'
-    test_challenge_filename = 'X_test_challenge_clean.pkl'
-
-    X_train, X_test_challenge, Y_train = load_data(fast_coeff)
-
-    X_train_clean, X_test_challenge_clean = tokenise_cleaning_data(
-        X_train,
-        X_test_challenge,
-        train_filename,
-        test_challenge_filename
-    )
-
-    X_train_tfidf, X_test_challenge_tfidf = vectorize_data(
-        X_train_clean,
-        X_test_challenge_clean
-    )
-
-    model = train_model(
-        X_train_tfidf,
-        Y_train
-    )
-
-    Y_pred_challenge = model.predict(X_test_challenge_tfidf)
-
-    header.Save_label_output(Y_pred_challenge, len(X_train_clean))
-
-    exec_time_end = time.time()
-    exec_time_h, exec_time_min, exec_time_s = header.convert_seconds(exec_time_end - exec_time_start)
-    print(f"Executed in {int(exec_time_h)}h {int(exec_time_min)}min {int(exec_time_s)}s")
-
-if __name__ == "__main__":
-    main(fast_coeff=1)
