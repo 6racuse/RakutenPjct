@@ -82,7 +82,7 @@ Choisir un modèle à éxécuter :
 
 Choix :   
 ```
-Il suffit alors de choisir le modèle, suite à quoi une nouvelle ligne apparaît, proposant de load s'il existe le modèle pré-entrainné (voir les [exemples](#Exemples))
+Il suffit alors de choisir le modèle, suite à quoi une nouvelle ligne apparaît, proposant de load s'il existe le modèle pré-entrainné, le résultat est stocké dans `./ouput` (voir les [exemples](#Exemples))
 
 ## History
 Ici est récapitulé l'avancé du projet pour chacun des membres du groupe
