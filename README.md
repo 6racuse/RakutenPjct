@@ -96,7 +96,8 @@ Ici est récapitulé l'avancé du projet pour chacun des membres du groupe
 - **23/05** : problème réglé, retour au fichier main.py et amélioration de l'interface utilisateur, test d'ajout du pipeline neural network.
 - **24/05** : Amélioration de la récupération des données designation, et récupération des données description pour les utiliser. Mise en forme du réseau de neurone sous forme pipeline. 
 - **25/05** : Multiples gestion de merges entre les branches. Tests de régression non concluants => récupération du commit *e1r0* et épluchage des commits successifs. Fermeture de la branch **6racuse's-work**, push de la *version* release *e1r1* passant (enfin) le test de régression sur le **main**, suppression de l'enregistrement des matrices data, *version e1r2* . Merge de code de la branch **welto** utilisant nltk pour accélérer le préprocessing des strings, *version e1r3*
-- **26/05** fermeture de la *version e1r3*, début du merge de la final solution sur le main, pre *version e2r0* 
+- **26/05** fermeture de la *version e1r3*, début du merge de la final solution sur le main, pre *version e2r0* , rédaction rapport.
+- **27/05** Quasiment que des tests de régressions, tests fonctionnels, fermeture de la *version e2r0* et fin du rapport. 
 ### Welto CANDE
 - **15/05** : Démarrage du projet, importation et premier preprocessing des données textuelles (récupération des données d'intérêt). Travail en local.
 - **18/05** : Travail en local, calcul des matrices TF-IDF et preprocessing (tokenisation, cleaning) , premiers pas vers l'application de SVM.
