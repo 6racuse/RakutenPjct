@@ -41,8 +41,9 @@ import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
 ```
+## Vérifier les répertoires
 
-Vérifier que les chemins d'accès sont bons.
+Vérifier que les répertoires `./models`, `./data` et `./output` sont bien présents.
 
 ### Récupération des modèles
 
