@@ -57,7 +57,7 @@ Il est évident que le code fonctionne très bien sans, il prendra juste plus de
 
 Pour lancer le programme, exécuter le programme **Zmain.py** dans le path dans lequel le repository a été copié :
 ```PS
-PS C:\Codes\IA\DS\Rak\RakutenPjct>
+PS C:\Codes\IA\DS\Rak\RakutenPjct> python Zmain.py
 ```
 
 Suite à cela, le programme effectue le preprocessing des données, et l'onglet de sélection du modèle s'affiche : 
