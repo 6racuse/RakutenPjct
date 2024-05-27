@@ -124,7 +124,7 @@ Reload neural network model - mandatory if nn_model.keras doesn't exist - (yes/n
 Une fois le choix fait, le programme effectue la prédiction des labels, et les stocke dans le fichier **output_nn.csv** du répertoire **output**. Le modèle entrainné peut être récupéré sous le nom de **nn_model.keras** dans le répertoire **models**
 
 
-### Use Case 2 : 
+### Use Case 2 : Lancement de la solution
 Après avoir lancé le programme, sur l' [onglet de sélection](#Run), rentrer :
 ```PS
 Choix : 5
