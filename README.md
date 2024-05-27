@@ -42,7 +42,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 ```
 
-Vérifier les chemins d'accès sont bons : / et \ 
+Vérifier les chemins d'accès sont bons
 
 ### Récupération des modèles
 
