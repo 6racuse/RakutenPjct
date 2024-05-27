@@ -127,16 +127,30 @@ Une fois le choix fait, le programme effectue la prédiction des labels, et les 
 ### Use Case 2 : 
 Après avoir lancé le programme, sur l' [onglet de sélection](#Run), rentrer :
 ```PS
-Choix : 1
+Choix : 5
 ```
-Puis la fenêtre suivante apparaît :
+Puis les fenêtres suivantes apparaîssent :
 ```
 Reload neural network model - mandatory if nn_model.keras doesn't exist - (yes/no) ? : 
 ```
+
 - **yes** recrée l'entrainnement du réseau de neurones.
 - **no**  charge le model entrainné s'il est présent en mémoire, sinon il relance l'entrainnement du réseau de neurones
 
-Une fois le choix fait, le programme effectue la prédiction des labels, et les stocke dans le fichier **output_nn.csv** du répertoire **output**. Le modèle entrainné peut être récupéré sous le nom de **nn_model.keras** dans le répertoire **models**
+Le réseau de neurones se reload (ou pas selon le choix précédent), et prédit des labels. Suite à cela, la même étape se répète pour les autres modèles : 
+```
+Reload SVM model - mandatory if svm_model.joblib doesn't exist - (yes/no) ? :
+```
+
+```
+Reload kNN model - mandatory if knn_model.joblib doesn't exist - (yes/no) ? :
+```
+
+```
+Reload RF model - mandatory if rf_model.joblib doesn't exist - (yes/no) ? : 
+```
+
+Une fois toutes ces étapes passées, le programme effectue la prédiction des labels, et les stocke dans le fichier **output_weighted_votes.csv** du répertoire **output**. 
 
 ## Contacts
 - Alexis : alexis.chatail-rigolleau@student-cs.fr
