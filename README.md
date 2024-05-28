@@ -78,7 +78,7 @@ Choisir un modèle à éxécuter :
      2 - SVM (f1-score 0.8256) 
      3 - KNN (f1-score 0.7113)
      4 - RF  (f1-score 0,7920)
-     5 - Solution to the project (f1-score 0.808)
+     5 - Solution to the project (f1-score 0.807)
 
 Choix :   
 ```
